@@ -18,7 +18,7 @@ def processKYC():
     payload = parse_request(request.get_json()) # verify and retrieve JSON from JWT
     recordJSON(payload) # log JSON into text file
 
-    return {"success":True}
+    return jsonify({"success":True})
 
 
 if __name__ == '__main__':
