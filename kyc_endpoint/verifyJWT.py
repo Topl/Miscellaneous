@@ -1,3 +1,4 @@
+#this function is for verifying and decoding the jwt and returning to the API
 import jwt
 
 f = open('publicKey.pem')
