@@ -1,3 +1,4 @@
+# this function simply writes the JSON files to a text file for logging
 import json
 
 def recordJSON(json_in):

@@ -1,2 +1,0 @@
-test
-test2{"some": "payload", "field": "testField"}
