@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 # applies the Access-Control-Allow-Origin property to the api route as required by IDM
 CORS(app)
+#CORS(app, resources={r"/kyc": {"origins": "*"}})
 
 # setup the KYC route
 @app.route("/kyc", methods=["POST"])
