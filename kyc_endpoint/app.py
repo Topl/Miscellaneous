@@ -1,12 +1,24 @@
+# standard modules
 from flask import Flask, request, jsonify
-from verifyJWT import parse_request
+from flask_cors import CORS
 
+# selfmade modules for defined tasks
+from verifyJWT import parse_request
+from recordJSONtoFile import recordJSON
+
+# standard instantiantion of the api application through flask
 app = Flask(__name__)
 
+# applies the Access-Control-Allow-Origin property to the api route as required by IDM
+CORS(app)
+
+# setup the KYC route
 @app.route("/kyc", methods=["POST"])
 def processKYC():
-    payload = parse_request(request.form.get('response'))
-    return jsonify(payload)
+    payload = parse_request(request.get_json()) # verify and retrieve JSON from JWT
+    recordJSON(payload) # log JSON into text file
+
+    return jsonify({"success":True})
 
 
 if __name__ == '__main__':
