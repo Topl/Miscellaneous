@@ -20,10 +20,6 @@ def processKYC():
 
     return jsonify({"success":True})
 
-@app.route("/test")
-def testRoute():
-    return "Hello World!"
-
 
 # if __name__ == '__main__':
 #     app.run(debug=True)
