@@ -10,8 +10,7 @@ from recordJSONtoFile import recordJSON
 app = Flask(__name__)
 
 # applies the Access-Control-Allow-Origin property to the api route as required by IDM
-CORS(app)
-#CORS(app, resources={r"/kyc": {"origins": "*"}})
+CORS(app, resources={r"/kyc": {"origins":"*"}})
 
 # setup the KYC route
 @app.route("/kyc", methods=["POST"])
@@ -21,6 +20,10 @@ def processKYC():
 
     return jsonify({"success":True})
 
+@app.route("/test")
+def testRoute():
+    return "Hello World!"
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
