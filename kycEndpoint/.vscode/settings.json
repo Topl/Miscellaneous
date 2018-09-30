@@ -1,0 +1,3 @@
+{
+    "python.pythonPath": "${workspaceFolder}\\api-env\\Scripts\\python.exe"
+}
