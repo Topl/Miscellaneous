@@ -20,6 +20,10 @@ def processKYC():
 
     return jsonify({"success":True})
 
+@app.route("/test")
+def testFunc():
+    return "Hello World!"
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
