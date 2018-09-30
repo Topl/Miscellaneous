@@ -1,6 +1,0 @@
-pyjwt
-flask
-flask-cors
-cryptography
-web3
-uwsgi
