@@ -16,7 +16,7 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 @app.route("/kyc", methods=["POST"])
 def processKYC():
     payload = parse_request(request.get_json()) # verify and retrieve JSON from JWT
-    recordJSON(payload) # log JSON into text file
+    #recordJSON(payload) # log JSON into text file
 
     return jsonify({"success":True})
 
