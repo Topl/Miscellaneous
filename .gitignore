@@ -5,3 +5,4 @@ kycEndpoint/apienv/
 kycEndpoint/__pycache__/
 kycEndpoint/.vscode/
 kycEndpoint/keys/pr*
+*.cpython
