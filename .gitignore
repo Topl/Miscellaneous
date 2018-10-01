@@ -2,6 +2,6 @@ kycEndpoint/requestLog.txt
 kycEndpoint/exampleLog.txt
 kycEndpoint/apienv/
 *.sock
-kycEndpoint/*py*/
+kycEndpoint/__pycache__/
 kycEndpoint/.vscode/
 kycEndpoint/keys/pr*
