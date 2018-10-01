@@ -20,8 +20,7 @@ def processKYC():
     recordJSON(payload) # log JSON into text file
     tx_hash = sendTx.main(payload['form_data']['btc'])
 
-    return str(type(payload))
-    #return jsonify({"success":True})
+    return jsonify({"success":True})
 
 @app.route("/test")
 def testFunc():
