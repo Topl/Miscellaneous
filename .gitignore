@@ -2,3 +2,7 @@ kycEndpoint/requestLog.txt
 kycEndpoint/exampleLog.txt
 kycEndpoint/apienv/
 *.sock
+kycEndpoint/__*/
+kycEndpoint/.vscode/
+kycEndpoint/keys/eth*
+kycEndpoint/keys/infura*

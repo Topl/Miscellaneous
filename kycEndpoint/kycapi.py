@@ -5,6 +5,7 @@ from flask_cors import CORS
 # selfmade modules for defined tasks
 from verifyJWT import parse_request
 from recordJSONtoFile import recordJSON
+import sendTransaction_Rinkeby as sendTx
 
 # standard instantiantion of the api application through flask
 app = Flask(__name__)
@@ -16,9 +17,11 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 @app.route("/kyc", methods=["POST"])
 def processKYC():
     payload = parse_request(request.get_json()) # verify and retrieve JSON from JWT
-    #recordJSON(payload) # log JSON into text file
+    recordJSON(payload) # log JSON into text file
+    tx_hash = sendTx.main(payload['form_data']['btc'])
 
-    return jsonify({"success":True})
+    #return jsonify({"success":True})
+    return jsonify({"addr": payload['form_data']['btc'], "tx_hash": tx_hash})
 
 @app.route("/test")
 def testFunc():
@@ -26,4 +29,5 @@ def testFunc():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    #app.run(host='0.0.0.0')
+    app.run(host='127.0.0.1', debug=True)
