@@ -19,7 +19,7 @@ def main(user_addr):
     #Use the address of the deployed contract and the contract abi loaded from the json file to create the contract instance
     contract = web3.eth.contract(address=web3.toChecksumAddress(arbits_presale_addr), abi=arbits_presale_abi)
     tx_hash = contract.functions.add_to_whitelist(web3.toChecksumAddress(user_addr)).transact()
-    print(Web3.toHex(tx_hash))
+    
     return Web3.toHex(tx_hash)
 
     

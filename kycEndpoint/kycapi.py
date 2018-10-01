@@ -16,11 +16,12 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 # setup the KYC route
 @app.route("/kyc", methods=["POST"])
 def processKYC():
-    #payload = parse_request(request.get_json()) # verify and retrieve JSON from JWT
-    #recordJSON(payload) # log JSON into text file
-    #tx_hash = sendTx.main(payload['form_data']['btc'])
+    payload = parse_request(request.get_json()) # verify and retrieve JSON from JWT
+    recordJSON(payload) # log JSON into text file
+    tx_hash = sendTx.main(payload['form_data']['btc'])
 
-    return jsonify({"success":True})
+    return str(type(payload))
+    #return jsonify({"success":True})
 
 @app.route("/test")
 def testFunc():
