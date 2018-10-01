@@ -6,3 +6,4 @@ kycEndpoint/__*/
 kycEndpoint/.vscode/
 kycEndpoint/keys/eth*
 kycEndpoint/keys/infura*
+kycEndpoint/keys/pr*

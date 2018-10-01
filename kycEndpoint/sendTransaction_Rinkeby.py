@@ -3,7 +3,7 @@ import json
 
 
 # Get API key for infura
-with open('./keys/infuraRinkebyAPI.txt','r') as infura:
+with open('./keys/pr_infuraRinkebyAPI.txt','r') as infura:
     apiKey = infura.read()
 
 ##Establish connection to Ethereum network
@@ -17,7 +17,7 @@ with open('./abi/arbits_presale.json','r') as f:
     arbits_presale_abi = json.load(f)
     arbits_presale_abi = arbits_presale_abi['abi']
 
-with open('./keys/eth0_keyfile') as keyfile:
+with open('./keys/pr_eth0_keyfile') as keyfile:
     encKey = keyfile.read()
     toplAcct = w3.eth.account.privateKeyToAccount(w3.eth.account.decrypt(encKey, 'tZn%FKkHQ8MmCNv&Ng9m'))
 

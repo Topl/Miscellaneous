@@ -2,8 +2,8 @@
 import jwt
 
 # Identity Mind public keys are available at https://regtech.identitymind.store/accounts/d/%20
-f = open('./keys/publicKey.pem') # this is for locally generated testing
-#f = open('./keys/idmSandboxPubKey.pem') # Identitymind's sandbox public key
+#f = open('./keys/publicKey.pem') # this is for locally generated testing
+f = open('./keys/idmSandboxPubKey.pem') # Identitymind's sandbox public key
 #f = open('./keys/idmProdPubKey.pem') # Identitymind's production public key
 
 publicKey = f.read()
