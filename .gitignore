@@ -1,3 +1,4 @@
 kycEndpoint/requestLog.txt
 kycEndpoint/exampleLog.txt
 kycEndpoint/apienv/
+*.sock
