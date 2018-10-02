@@ -6,3 +6,4 @@ kycEndpoint/__pycache__/
 kycEndpoint/.vscode/
 kycEndpoint/keys/pr*
 *.pyc
+kycEndpoint/Logs/
