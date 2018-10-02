@@ -17,17 +17,19 @@ with open('./abi/arbits_presale.json','r') as f:
     arbits_presale_abi = json.load(f)
     arbits_presale_abi = arbits_presale_abi['abi']
 
-with open('./keys/pr_eth0_keyfile') as keyfile:
-    encKey = keyfile.read()
-    toplAcct = w3.eth.account.privateKeyToAccount(w3.eth.account.decrypt(encKey, 'tZn%FKkHQ8MmCNv&Ng9m'))
-
 # Setup contract instance
 arbContract = w3.eth.contract(
     address=w3.toChecksumAddress(arbits_presale_addr), 
     abi=arbits_presale_abi
     )
 
+def _getKey():
+    with open('./keys/pr_eth0_keyfile') as keyfile: 
+        return w3.eth.account.privateKeyToAccount(w3.eth.account.decrypt(keyfile.read(), 'tZn%FKkHQ8MmCNv&Ng9m'))
+
 def main(user_addr):
+    toplAcct = _getKey()
+
     txParams = {
         'from': w3.toChecksumAddress(toplAcct.address),
         'chainId': 4,
