@@ -4,3 +4,5 @@ flask-cors
 cryptography
 web3
 uwsgi
+sqlalchemy
+flask-sqlalchemy

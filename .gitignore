@@ -7,3 +7,4 @@ kycEndpoint/.vscode/
 kycEndpoint/keys/pr*
 *.pyc
 kycEndpoint/Logs/
+kycEndpoint/db/

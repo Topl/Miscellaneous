@@ -1,7 +1,6 @@
 from web3 import Web3
 import json
 
-
 # Get API key for infura
 with open('./keys/pr_infuraRinkebyAPI.txt','r') as infura:
     apiKey = infura.read()

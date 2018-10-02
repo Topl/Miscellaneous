@@ -1,5 +1,5 @@
 from web3 import Web3
-import json, asyncio
+import json
 
 ##Establish connection to Ethereum network
 web3 = Web3(Web3.HTTPProvider('http://localhost:7545')) # for local dev
@@ -21,5 +21,3 @@ def main(user_addr):
     tx_hash = contract.functions.add_to_whitelist(web3.toChecksumAddress(user_addr)).transact()
     
     return Web3.toHex(tx_hash)
-
-    
