@@ -1,0 +1,13 @@
+## This will return a row as a dict
+import kycapi
+flask_sqlalchemy.orm.attributes.instance_dict(Participant.query.get(1))
+
+## Get all rows
+Participant.query.all() 
+or
+kycapi.db.session.query(Participant).all()
+
+## I didn't make the app factory so have to do this to intialize the DB within the correct context
+## Flask-sqlalchemy pdf discuss the facotry route if I want to separate the models out (at least I think)
+import kycapi
+kycapi.db.create_all()
