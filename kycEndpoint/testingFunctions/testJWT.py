@@ -41,7 +41,7 @@ objToJWT = {
         "version": "2",
         "zip_code": "77098"
     },
-    "kyc_result": "ACCEPT",
+    "kyc_result": "DENY",
     "tid": "77c2b90e8e1391c79c27c569ee425d9ca2a45d5fc838f773deb72df56a39176b"
 }
 
