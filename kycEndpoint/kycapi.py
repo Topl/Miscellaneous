@@ -19,10 +19,10 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 def processKYC():
     payload = verifyJWT.parse_request(request) # verify and retrieve JSON from JWT
     #recordJSON(payload) # log JSON into text file
-    tx_hash = sendTx.main(payload['form_data']['btc'])
-
-    #return jsonify({"success":True})
-    return jsonify(payload)
+    #tx_hash = sendTx.main(payload['form_data']['btc'])
+  
+    return jsonify({"success":True})
+    
 
 @app.route("/test")
 def testFunc():
