@@ -11,3 +11,6 @@ kycapi.db.session.query(Participant).all()
 ## Flask-sqlalchemy pdf discuss the facotry route if I want to separate the models out (at least I think)
 import kycapi
 kycapi.db.create_all()
+
+## Formatting datetime timestamp to more legible text
+kycapi.Participant.query.get(1).form_submit.strftime('%Y%m%d_%H%M')
