@@ -7,9 +7,9 @@ import traceback
 import datetime
 import os
 import jwt
+# selfmade module for sending the ethereum transaction
+import sendTransaction_Rinkeby as sendTx 
 
-# selfmade modules for sending the ethereum transaction
-import sendTransaction_Rinkeby as sendTx
 
 # Define error log location
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
@@ -36,6 +36,7 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 # Setup database
 db = flask_sqlalchemy.SQLAlchemy(app)
 
+
 # Database model for saving form data
 class Participant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -52,24 +53,26 @@ class Participant(db.Model):
         return "<tid: {}, timestamp: {}, kyc: {}, eth: {}, tx_hash: {}, email: {}, country: {} >".format(
             self.tid, formTime(self.timestamp), self.kyc_result, self.eth_addr, self.tx_hash, self.email, self.addr_country)
 
+    
 ## This function will verify and return the payload from the JWT
 # Identity Mind public keys are available at https://regtech.identitymind.store/accounts/d/%20
 def verifyJWT(req):
     # If request is Ajax based (from IDM) open their public key otherwise use the test
     pubKeyPath = 'idmSandboxPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'publicKey.pem'
-    
     # Parse and verify JWT token
     reqJSON = req.get_json()
     with open('./keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
 
+    
 ## Define default route that will check for US based IP.
 # If in US kick out to error page, if not allow to the KYC form
 @app.route("/")
 def index():
-    if ipDB.country(request.remote_addr).country.iso_code == 'US':
+    if ipDB.country(str(request.remote_addr)).country.iso_code == 'US':
         return redirect('/tmp')
     return redirect('/kyc/general')
+
 
 ## setup the KYC route
 @app.route("/kyc", methods=["POST"])
@@ -81,7 +84,7 @@ def kycProcess():
         if payload['kyc_result'] != 'REPEATED':
             # send KYC request via Infura API if accepted, (if manual_review or deny then skip)
             tx_hash = sendTx.main(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
-
+            
             # construct database object and save participant data
             db.session.add(Participant(
                 tid = payload['tid'],
@@ -104,20 +107,24 @@ def kycProcess():
             errFile.write(traceback.format_exc())
         return jsonify({"success":False})
 
+    
 @app.route('/kyc/general', methods=["GET", "POST"])
 def generalForm():
     if request.method == 'POST':
         return redirect("/kyc/general")
     return render_template('form_host.html', iframeURL=(idmForm + "?user_id=genpop"))
 
+
 @app.route('/kyc/vip')
 def investorForm():
     return render_template('form_host.html', iframeURL=(idmForm + "?user_id=vip"))
+
 
 ## Setup a testing route
 @app.route("/tmp")
 def tmpFunc():
     return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
