@@ -1,5 +1,5 @@
 # standard modules
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import flask_sqlalchemy
 import traceback
@@ -8,8 +8,7 @@ import os
 import jwt
 
 # selfmade modules for sending the ethereum transaction
-#import sendTransaction_Rinkeby as sendTx
-import sendTransaction_Local as sendTx
+import sendTransaction_Rinkeby as sendTx
 
 # Define error log location
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
@@ -17,7 +16,7 @@ errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 
 # Define database location
 project_dir = os.path.dirname(os.path.abspath(__file__))
-database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', "localTestnet.db"))
+database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', "RinkebyTestnet.db"))
 
 # standard instantiantion of the api application through flask
 app = Flask(__name__)
@@ -57,6 +56,11 @@ def verifyJWT(req):
     with open('./keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
 
+## Define default route
+@app.route("/")
+def index():
+    idmURL = "https://regtech.identitymind.store/viewform/ratbn/"
+    return render_template('index.html', iframeURL=idmURL)
 
 ## setup the KYC route
 @app.route("/kyc", methods=["POST"])
@@ -99,5 +103,4 @@ def testFunc():
 
 
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0')
-    app.run(host='127.0.0.1', debug=True)
+    app.run(host='0.0.0.0')
