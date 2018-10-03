@@ -95,12 +95,12 @@ def kycProcess():
             errFile.write(traceback.format_exc())
         return jsonify({"success":False})
 
-@app.route('kyc/general')
+@app.route('/kyc/general')
 def generalForm():
     idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=genpop"
     return render_template('index.html', iframeURL=idmURL)
 
-@app.route('kyc/investor')
+@app.route('/kyc/investor')
 def investorForm():
     idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=vip"
     return render_template('index.html', iframeURL=idmURL)
