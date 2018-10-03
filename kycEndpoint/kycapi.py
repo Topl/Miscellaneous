@@ -1,5 +1,5 @@
 # standard modules
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect
 from flask_cors import CORS
 import flask_sqlalchemy
 import traceback
@@ -59,12 +59,11 @@ def verifyJWT(req):
 ## Define default route
 @app.route("/")
 def index():
-    idmURL = "https://regtech.identitymind.store/viewform/ratbn/"
-    return render_template('index.html', iframeURL=idmURL)
+    return render_templat('index.html')
 
 ## setup the KYC route
 @app.route("/kyc", methods=["POST"])
-def processKYC():
+def kycProcess():
     try:
         # verify and retrieve JSON from JWT
         payload = verifyJWT(request)
@@ -96,11 +95,20 @@ def processKYC():
             errFile.write(traceback.format_exc())
         return jsonify({"success":False})
 
+@app.route('kyc/general')
+def generalForm():
+    idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=genpop"
+    return render_template('index.html', iframeURL=idmURL)
+
+@app.route('kyc/investor')
+def investorForm():
+    idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=vip"
+    return render_template('index.html', iframeURL=idmURL)
+
 ## Setup a testing route
 @app.route("/test")
 def testFunc():
     return "The server is up and running!"
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
