@@ -120,6 +120,21 @@ def investorForm():
     return render_template('form_host.html', iframeURL=(idmForm + "?user_id=vip"))
 
 
+@app.route('/result/accept')
+def accept():
+    return render_template('accept.html')
+
+
+@app.route('/result/review')
+def review():
+    return render_template('review.html')
+
+
+@app.route('/result/deny')
+def deny():
+    return render_template('deny.html')
+
+
 @app.route('/error')
 def error():
     return render_template('error.html')
