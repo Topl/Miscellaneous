@@ -1,3 +1,8 @@
+## Main application for serving the Topl presale
+#
+#This product includes GeoLite2 data created by MaxMind, available from
+#<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+
 # standard modules
 from flask import Flask, request, jsonify, render_template, redirect
 from flask_cors import CORS
@@ -8,8 +13,8 @@ import datetime
 import os
 import jwt
 # selfmade module for sending the ethereum transaction
-import sendTransaction_Rinkeby as sendTx 
-
+#import sendTransaction_Rinkeby as sendTx 
+import sendTransaction_Local as sendTx 
 
 # Define error log location
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
@@ -19,11 +24,11 @@ errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 idmForm = 'https://regtech.identitymind.store/viewform/ratbn/'
 
 # Define the geo-location IP data base file location
-ipDB = geoip2.database.Reader('db/GeoLite2-Country.mmdb')
+ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
 
 # Define user database location
 project_dir = os.path.dirname(os.path.abspath(__file__))
-database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', "RinkebyTestnet.db"))
+database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', "LocalTestnet.db"))
 
 # standard instantiantion of the api application through flask
 app = Flask(__name__)
@@ -147,4 +152,5 @@ def tmpFunc():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    #app.run(host='0.0.0.0')
+    app.run(debug=True)

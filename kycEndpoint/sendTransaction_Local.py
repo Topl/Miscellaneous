@@ -5,7 +5,7 @@ import json
 web3 = Web3(Web3.HTTPProvider('http://localhost:7545')) # for local dev
 
 # Set contract addresses as deployed on ethereum network
-arbits_presale_addr = "0x62834b754a9265bbab089ef2c36b1c9714055dc0" # replace this with the addr from deployment
+arbits_presale_addr = "0x5b6c8af983e17bb4bdc987228a70165476e5e763" # replace this with the addr from deployment
 
 ##ABI should be from the contract json created in the truffle build folder after migration
 with open('./abi/arbits_presale.json','r') as f:
