@@ -59,7 +59,7 @@ def verifyJWT(req):
 ## Define default route
 @app.route("/")
 def index():
-    return render_templat('index.html')
+    return render_template('index.html')
 
 ## setup the KYC route
 @app.route("/kyc", methods=["POST"])
