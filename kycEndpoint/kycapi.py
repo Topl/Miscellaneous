@@ -70,7 +70,7 @@ def verifyJWT(req):
 @app.route("/")
 def index():
     if ipDB.country(str(request.remote_addr)).country.iso_code == 'US':
-        return redirect('/tmp')
+        return redirect('/error')
     return redirect('/kyc/general')
 
 
@@ -120,8 +120,13 @@ def investorForm():
     return render_template('form_host.html', iframeURL=(idmForm + "?user_id=vip"))
 
 
+@app.route('/error')
+def error():
+    return render_template('error.html')
+
+
 ## Setup a testing route
-@app.route("/tmp")
+@app.route('/tmp')
 def tmpFunc():
     return render_template('index.html')
 
