@@ -95,8 +95,11 @@ def kycProcess():
             errFile.write(traceback.format_exc())
         return jsonify({"success":False})
 
-@app.route('/kyc/general')
+@app.route('/kyc/general', methods=["GET", "POST"])
 def generalForm():
+    if request.method == 'POST':
+        return redirect("/kyc/general")
+    
     idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=genpop"
     return render_template('index.html', iframeURL=idmURL)
 
