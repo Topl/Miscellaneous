@@ -101,12 +101,12 @@ def generalForm():
         return redirect("/kyc/general")
     
     idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=genpop"
-    return render_template('index.html', iframeURL=idmURL)
+    return render_template('form_host.html', iframeURL=idmURL)
 
 @app.route('/kyc/investor')
 def investorForm():
     idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=vip"
-    return render_template('index.html', iframeURL=idmURL)
+    return render_template('form_host.html', iframeURL=idmURL)
 
 ## Setup a testing route
 @app.route("/test")
