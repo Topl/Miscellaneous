@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify, render_template, redirect
 from flask_cors import CORS
 import flask_sqlalchemy
+import geoip2.database
 import traceback
 import datetime
 import os
@@ -14,7 +15,13 @@ import sendTransaction_Rinkeby as sendTx
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
 errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 
-# Define database location
+# Define the IDM form URL
+idmForm = 'https://regtech.identitymind.store/viewform/ratbn/'
+
+# Define the geo-location IP data base file location
+ipDB = geoip2.database.Reader('/path/to/GeoLite2-City.mmdb')
+
+# Define user database location
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', "RinkebyTestnet.db"))
 
@@ -56,10 +63,13 @@ def verifyJWT(req):
     with open('./keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
 
-## Define default route
+## Define default route that will check for US based IP.
+# If in US kick out to error page, if not allow to the KYC form
 @app.route("/")
 def index():
-    return render_template('index.html')
+    if ipDB.country(request.remote_addr).country.iso_code == 'US':
+        return redirect('/tmp')
+    return redirect('/kyc/general')
 
 ## setup the KYC route
 @app.route("/kyc", methods=["POST"])
@@ -85,7 +95,6 @@ def kycProcess():
             )
             db.session.commit()
             return jsonify({"success":True})
-
         else: 
             return jsonify({"success":False})
 
@@ -99,19 +108,16 @@ def kycProcess():
 def generalForm():
     if request.method == 'POST':
         return redirect("/kyc/general")
-    
-    idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=genpop"
-    return render_template('form_host.html', iframeURL=idmURL)
+    return render_template('form_host.html', iframeURL=(idmForm + "?user_id=genpop"))
 
-@app.route('/kyc/investor')
+@app.route('/kyc/vip')
 def investorForm():
-    idmURL = "https://regtech.identitymind.store/viewform/ratbn/?user_id=vip"
-    return render_template('form_host.html', iframeURL=idmURL)
+    return render_template('form_host.html', iframeURL=(idmForm + "?user_id=vip"))
 
 ## Setup a testing route
-@app.route("/test")
-def testFunc():
-    return "The server is up and running!"
+@app.route("/tmp")
+def tmpFunc():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
