@@ -19,7 +19,7 @@ errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 idmForm = 'https://regtech.identitymind.store/viewform/ratbn/'
 
 # Define the geo-location IP data base file location
-ipDB = geoip2.database.Reader('/db/GeoLite2-Country.mmdb')
+ipDB = geoip2.database.Reader('db/GeoLite2-Country.mmdb')
 
 # Define user database location
 project_dir = os.path.dirname(os.path.abspath(__file__))
