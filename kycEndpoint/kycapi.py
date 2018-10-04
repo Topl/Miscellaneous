@@ -42,7 +42,7 @@ formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
 errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 
 # Define the IDM form URL
-idmForm = 'https://regtech.identitymind.store/viewform/gyeq4/'
+idmForm = 'https://regtech.identitymind.store/viewform/gyeq4'
 
 # Define the geo-location IP data base file location
 ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
@@ -149,16 +149,14 @@ def kycProcess():
         return jsonify({"success":False})
 
 
-@app.route('/kyc/general', methods=["GET", "POST"])
+@app.route('/kyc/general')
 def generalForm():
-    if request.method == 'POST':
-        return redirect("/kyc/general")
-    return render_template('form_host.html', iframeURL=(idmForm + "?user_id" + id_generator(10)))
+    return render_template('form_host.html', iframeURL=(idmForm + "/?user_id=" + id_generator(10)))
 
 
 @app.route('/kyc/vip')
 def investorForm():
-    return render_template('form_host.html', iframeURL=(idmForm + "?user_id=vip"))
+    return render_template('form_host.html', iframeURL=(idmForm + "/?user_id=vip"))
 
 
 @app.route('/result/accept')
