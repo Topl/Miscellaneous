@@ -71,6 +71,7 @@ class Participant(db.Model):
     ip_addr   = db.Column(db.String(15), nullable=False)
     kyc_result = db.Column(db.String(15), nullable=False)
     eth_addr = db.Column(db.String(45), nullable=False)
+    user_id = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(80))
     addr_country = db.Column(db.String(2), nullable=False)
     doc_country = db.Column(db.String(2), nullable=False)
