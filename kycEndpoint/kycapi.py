@@ -12,9 +12,28 @@ import traceback
 import datetime
 import os
 import jwt
+import string
+import random
+import importlib
+
+## Specify environment where this is running
+env = 'Dev'
+
+# Setup variables based on environemtn
+if env == 'Dev':
+    toplDBFile = 'RinkebyTestnet.db'
+    servIP = '0.0.0.0'
+    ethModName = 'sendTransaction_Rinkeby'
+else:
+    toplDBFile = 'LocalTestnet.db'
+    servIP = '127.0.0.1'
+    ethModName = 'sendTransaction_Local'
+
+# Import ethereum module for sending the kyc TX
+sendTX = importlib.import_module(ethModName)
+
 # selfmade module for sending the ethereum transaction
-#import sendTransaction_Rinkeby as sendTx 
-import sendTransaction_Local as sendTx 
+import sendTransaction_Rinkeby as sendTx 
 
 # Define error log location
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
@@ -28,7 +47,7 @@ ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
 
 # Define user database location
 project_dir = os.path.dirname(os.path.abspath(__file__))
-database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', "LocalTestnet.db"))
+database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', toplDBFile))
 
 # standard instantiantion of the api application through flask
 app = Flask(__name__)
@@ -69,6 +88,10 @@ def verifyJWT(req):
     with open('./keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
 
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
     
 ## Define default route that will check for US based IP.
 # If in US kick out to error page, if not allow to the KYC form
@@ -89,12 +112,13 @@ def kycProcess():
         if payload['kyc_result'] != 'REPEATED':
             # send KYC request via Infura API if accepted, (if manual_review or deny then skip)
             tx_hash = sendTx.main(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
-            
+
             # construct database object and save participant data
             db.session.add(Participant(
                 tid = payload['tid'],
                 kyc_result = payload['kyc_result'],
                 eth_addr = payload['form_data']['btc'],
+                user_id = payload['form_data']['user_id'],
                 tx_hash = tx_hash,
                 email = payload['form_data']['email'],
                 addr_country = payload['form_data']['country'],
@@ -112,12 +136,12 @@ def kycProcess():
             errFile.write(traceback.format_exc())
         return jsonify({"success":False})
 
-    
+
 @app.route('/kyc/general', methods=["GET", "POST"])
 def generalForm():
     if request.method == 'POST':
         return redirect("/kyc/general")
-    return render_template('form_host.html', iframeURL=(idmForm + "?user_id=genpop"))
+    return render_template('form_host.html', iframeURL=(idmForm + "?user_id" + id_generator(10)))
 
 
 @app.route('/kyc/vip')
@@ -152,5 +176,4 @@ def tmpFunc():
 
 
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0')
-    app.run(debug=True)
+    app.run(host=servIP)
