@@ -17,18 +17,15 @@ import random
 import importlib
 
 ## Specify environment where this is running
-#dev = 1
+dev = 0
 
 # Setup variables based on environemtn
-try:
-    dev
+if dev:
     toplDBFile = 'RinkebyTestnet.db'
     servIP = '0.0.0.0'
     debugBool = 0
     ethModName = 'sendTransaction_Rinkeby'
-except:
-    pass
-finally:
+else:
     toplDBFile = 'LocalTestnet.db'
     servIP = '127.0.0.1'
     debugBool = 1
