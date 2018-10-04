@@ -17,19 +17,19 @@ import random
 import importlib
 
 ## Specify environment where this is running
-dev = 0
+dev = 1
 
 # Setup variables based on environemtn
 if dev:
-    toplDBFile = 'RinkebyTestnet.db'
-    servIP = '0.0.0.0'
-    debugBool = 0
-    ethModName = 'sendTransaction_Rinkeby'
-else:
     toplDBFile = 'LocalTestnet.db'
     servIP = '127.0.0.1'
     debugBool = 1
     ethModName = 'sendTransaction_Local'
+else:
+    toplDBFile = 'RinkebyTestnet.db'
+    servIP = '0.0.0.0'
+    debugBool = 0
+    ethModName = 'sendTransaction_Rinkeby'
 
 # Import ethereum module for sending the kyc TX
 sendTX = importlib.import_module(ethModName)
@@ -68,6 +68,7 @@ class Participant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tid = db.Column(db.String(80), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    ip_addr   = db.Column(db.String(15), nullable=False)
     kyc_result = db.Column(db.String(15), nullable=False)
     eth_addr = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(80))
@@ -125,6 +126,7 @@ def kycProcess():
             # construct database object and save participant data
             db.session.add(Participant(
                 tid = payload['tid'],
+                ip_addr = request.remote_addr,
                 kyc_result = payload['kyc_result'],
                 eth_addr = payload['form_data']['btc'],
                 user_id = payload['form_data']['user_id'],
@@ -178,9 +180,9 @@ def error():
     return render_template('error.html')
 
 
-## Setup a testing route
+# Default route
 @app.route('/home')
-def tmpFunc():
+def home():
     return render_template('index.html')
 
 
