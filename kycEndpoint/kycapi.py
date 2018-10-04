@@ -17,16 +17,21 @@ import random
 import importlib
 
 ## Specify environment where this is running
-env = 'Dev'
+#dev = 1
 
 # Setup variables based on environemtn
-if env == 'Dev':
+try:
+    dev
     toplDBFile = 'RinkebyTestnet.db'
     servIP = '0.0.0.0'
+    debugBool = 0
     ethModName = 'sendTransaction_Rinkeby'
-else:
+except:
+    pass
+finally:
     toplDBFile = 'LocalTestnet.db'
     servIP = '127.0.0.1'
+    debugBool = 1
     ethModName = 'sendTransaction_Local'
 
 # Import ethereum module for sending the kyc TX
@@ -40,7 +45,7 @@ formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
 errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 
 # Define the IDM form URL
-idmForm = 'https://regtech.identitymind.store/viewform/ratbn/'
+idmForm = 'https://regtech.identitymind.store/viewform/gyeq4/'
 
 # Define the geo-location IP data base file location
 ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
@@ -97,9 +102,16 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 # If in US kick out to error page, if not allow to the KYC form
 @app.route("/")
 def index():
-    if ipDB.country(str(request.remote_addr)).country.iso_code == 'US':
-        return redirect('/error')
-    return redirect('/kyc/general')
+    ipBool = 0
+    try:
+        ipBool = ipDB.country(str(request.remote_addr)).country.iso_code == 'US'
+    except:
+        pass
+    finally:
+        if ipBool:
+            return redirect('/error')
+        else: 
+            return redirect('/kyc/general')
 
 
 ## setup the KYC route
@@ -170,10 +182,10 @@ def error():
 
 
 ## Setup a testing route
-@app.route('/tmp')
+@app.route('/home')
 def tmpFunc():
     return render_template('index.html')
 
 
 if __name__ == '__main__':
-    app.run(host=servIP)
+    app.run(host=servIP,debug=debugBool)

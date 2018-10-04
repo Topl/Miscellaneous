@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html  lang="en">
+
+<head>
+    <title>Topl | Empowering Growth, Enabling Investment</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+</head>
+
+
+<body>
+    <nav class="navbar navbar-light" style="background-color:lightgrey">
+        <a class="navbar-brand" href="https://topl.co">
+            <img src="{{ url_for('static', filename='img/topl_base.png') }}" height="75px" alt="Topl">
+        </a>
+    </nav>
+    <div class="container">
+        <br>
+        {% block content %}{% endblock %}
+        <br>
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>

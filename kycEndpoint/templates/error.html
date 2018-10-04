@@ -1,8 +1,43 @@
-<div style="width: 40%; margin: auto; background-color: aqua; padding: 20px; margin-top: 20%;"> 
-	<h1 style="text-align: center;">
-    Error
-  </h1> 
-	<h3 style="text-align: center;">
-    Description Text
-  </h3> 
-</div>
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="bg-info col-10 rounded-top" style="height:80px">
+    <div class="row h-100">
+      <div class="col-sm-1 my-auto">
+        <span class="oi oi-ban" title="ban" aria-hidden="true" style="font-size:3em"></span>
+      </div>
+      <div class="col-sm-10 my-auto">
+        <h2 class="text-center">
+          United States IP Detected
+        </h2>
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+  </div>
+  <div class="col-10 border rounded-bottom">
+    <div class="text-justify p-3">
+    <h5>
+      We've detected that you are visiting Topl from the following address in the USA
+      <br>
+    </h5>
+    <h2>
+      IP: {{ request['remote_addr'] }}
+    </h2>
+    <h5>
+      <br>
+    Unfortunately, we are unable to allow US residents to participate in the Topl presale due to
+    legal restrictions. We apologize for any inconvenience.
+    <br>
+    <br>
+    If you have any questions or feel you have received this message in error,
+    you may contact us at <a href="info@topl.me">info@topl.me</a>
+    <br>
+    <br>
+    We thank you for your support.
+    <br>
+    <a href="https://presale.topl.co">https://presale.topl.co</a>
+    </h5>
+  </div>
+  </div>
+  {% endblock %}
