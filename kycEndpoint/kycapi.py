@@ -66,7 +66,7 @@ def verifyJWT(req):
     pubKeyPath = 'idmSandboxPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'publicKey.pem'
     # Parse and verify JWT token
     reqJSON = req.get_json()
-    with open('./keys/' + pubKeyPath) as publicKey:
+    with open('static/keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
 
 

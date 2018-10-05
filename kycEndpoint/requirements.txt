@@ -1,9 +1,14 @@
+# General Usage
 pyjwt
 flask
 flask-cors
 cryptography
 web3
-uwsgi
 flask-sqlalchemy
 geoip2
+
+# Production
+uwsgi
+
+# Development (jaa)
 dotenv
