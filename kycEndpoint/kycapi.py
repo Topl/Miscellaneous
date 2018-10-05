@@ -15,7 +15,7 @@ formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
 errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 
 # Define the IDM form URL
-idmForm = 'https://regtech.identitymind.store/viewform/gyeq4'
+idmURL = 'https://regtech.identitymind.store/viewform/'
 
 # Define the geo-location IP data base file location
 ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
@@ -77,17 +77,13 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 ## Define default route that will check for US based IP.
 # If in US kick out to error page, if not allow to the KYC form
 @app.route("/")
-def index():
-    ipBool = 0
+def index(ipBool=0):
     try:
         ipBool = ipDB.country(str(request.remote_addr)).country.iso_code == 'US'
     except:
         pass
     finally:
-        if ipBool:
-            return redirect('/error')
-        else: 
-            return redirect('/kyc/general')
+        return redirect('/error') if ipBool else redirect('/kyc/general')     
 
 
 ## setup the KYC route
@@ -97,43 +93,43 @@ def kycProcess():
         # verify and retrieve JSON from JWT
         payload = verifyJWT(request)
 
-        if payload['kyc_result'] != 'REPEATED':
-            # send KYC request via Infura API if accepted, (if manual_review or deny then skip)
-            tx_hash = sendTx.main(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
+        # send KYC request via Infura API if accepted, (if manual_review, deny, or repeated then skip)
+        tx_hash = sendTx.main(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
 
-            # construct database object and save participant data
-            db.session.add(Participant(
-                tid = payload['tid'],
-                ip_addr = request.remote_addr,
-                kyc_result = payload['kyc_result'],
-                eth_addr = payload['form_data']['btc'],
-                user_id = payload['form_data']['user_id'],
-                tx_hash = tx_hash,
-                email = payload['form_data']['email'],
-                addr_country = payload['form_data']['country'],
-                doc_country = payload['form_data']['docCountry']
-                )
+        # construct database object and save participant data
+        db.session.add(Participant(
+            tid = payload['tid'],
+            ip_addr = request.remote_addr,
+            kyc_result = payload['kyc_result'],
+            eth_addr = payload['form_data']['btc'],
+            user_id = payload['form_data']['user_id'],
+            tx_hash = tx_hash,
+            email = payload['form_data']['email'],
+            addr_country = payload['form_data']['country'],
+            doc_country = payload['form_data']['docCountry']
             )
-            db.session.commit()
-            return jsonify({"success":True})
-        else: 
-            return jsonify({"success":False})
+        )
+        db.session.commit()
+
+        return jsonify({"success":True})
 
     except Exception:
-        # Handle exceptions to the process by creating a logfile
+        # Handle exceptions to the process by creating a logfile with the full traceback
         with open(errFilePath(datetime.datetime.now()),'a+') as errFile:
             errFile.write(traceback.format_exc())
         return jsonify({"success":False})
 
 
+# for serving the general population particpating in the sale
 @app.route('/kyc/general')
 def generalForm():
-    return render_template('form_host.html', iframeURL=(idmForm + "/?user_id=" + id_generator(10)))
+    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + id_generator(10)))
 
 
+# for serving fiat investors through a slightly different form
 @app.route('/kyc/vip')
 def investorForm():
-    return render_template('form_host.html', iframeURL=(idmForm + "/?user_id=vip"))
+    return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
 
 
 @app.route('/result/accept')
