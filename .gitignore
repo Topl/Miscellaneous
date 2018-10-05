@@ -4,7 +4,7 @@ kycEndpoint/apienv/
 *.sock
 kycEndpoint/__pycache__/
 kycEndpoint/.vscode/
-kycEndpoint/keys/pr*
+kycEndpoint/static/keys/pr*
 *.pyc
 kycEndpoint/Logs/
 kycEndpoint/db/

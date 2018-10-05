@@ -1,6 +1,7 @@
 ## This will return a row as a dict
 import kycapi
-flask_sqlalchemy.orm.attributes.instance_dict(Participant.query.get(1))
+kycapi.flask_sqlalchemy.orm.attributes.instance_dict(kycapi.Participant.query.get(1))
+pdict = lambda x: kycapi.flask_sqlalchemy.orm.attributes.instance_dict(kycapi.Participant.query.get(x))
 
 ## Get all rows
 Participant.query.all() 

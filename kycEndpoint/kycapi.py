@@ -38,7 +38,7 @@ db = flask_sqlalchemy.SQLAlchemy(app)
 # Setup variables based on environemtn
 ethNetwork = 'Rinkeby' if app.env == 'production' else 'Local'
 # Import ethereum module for sending the kyc TX
-sendTX = importlib.import_module('sendTransaction_' + ethNetwork)
+app.sendTX = importlib.import_module('sendTransaction_' + ethNetwork)
 
 # Database model for saving form data
 class Participant(db.Model):

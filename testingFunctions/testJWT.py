@@ -2,11 +2,11 @@ import jwt
 # docs for pyJWT https://pyjwt.readthedocs.io/en/latest/usage.html
 # This script is to make sure that I can correctly read in the key files and generate a JWT for use in sending to the API through postman
 
-f = open('../keys/privateKey.pem')
+f = open('kycEndpoint/static/keys/privateKey.pem')
 prKey = f.read()
 f.close()
 
-f = open('../keys/publicKey.pem')
+f = open('kycEndpoint/static/keys/publicKey.pem')
 puKey = f.read()
 f.close()
 
@@ -41,10 +41,13 @@ objToJWT = {
         "version": "2",
         "zip_code": "77098"
     },
-    "kyc_result": "DENY",
+    "kyc_result": "ACCEPT",
     "tid": "77c2b90e8e1391c79c27c569ee425d9ca2a45d5fc838f773deb72df56a39176b"
 }
 
 
 encodedJWT = jwt.encode(objToJWT, prKey, algorithm='RS256')
 decodedJWT = jwt.decode(encodedJWT, puKey, algorithms='RS256')
+
+with open('encodedJWT','w') as f:
+    f.write(encodedJWT.decode('utf-8'))

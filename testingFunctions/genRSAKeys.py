@@ -4,13 +4,11 @@ from Crypto.PublicKey import RSA
 
 key = RSA.generate(2048) #generate a new 256 byte RSA key
 
-f = open('privateKey.pem','wb')
-f.write(key.exportKey('PEM'))
-f.close()
+with open('privateKey.pem','wb') as f:
+    f.write(key.exportKey('PEM'))
 
-f = open('publicKey.pem','wb')
-f.write(key.publickey().exportKey('PEM'))
-f.close()
+with open('publicKey.pem','wb') as f:
+    f.write(key.publickey().exportKey('PEM'))
 
 #privateKey = key.exportKey('PEM')
 #publicKey = key.publickey().exportKey('PEM')
