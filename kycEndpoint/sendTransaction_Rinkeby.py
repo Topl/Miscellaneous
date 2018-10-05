@@ -24,7 +24,7 @@ arbContract = w3.eth.contract(
 
 def _getKey():
     with open('static/keys/pr_eth0_keyfile') as keyfile: 
-        return w3.eth.account.privateKeyToAccount(w3.eth.account.decrypt(keyfile.read(), 'tZn%FKkHQ8MmCNv&Ng9m'))
+        return w3.eth.account.privateKeyToAccount(w3.eth.account.decrypt(keyfile.read(), 'Xja^8gS7TQu4D#y77MM3'))
 
 def main(user_addr):
     toplAcct = _getKey()
