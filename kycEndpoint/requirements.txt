@@ -5,3 +5,5 @@ cryptography
 web3
 uwsgi
 flask-sqlalchemy
+geoip2
+dotenv

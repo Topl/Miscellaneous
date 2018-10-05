@@ -8,34 +8,7 @@ from flask import Flask, request, jsonify, render_template, redirect
 from flask_cors import CORS
 import flask_sqlalchemy
 import geoip2.database
-import traceback
-import datetime
-import os
-import jwt
-import string
-import random
-import importlib
-
-## Specify environment where this is running
-dev = 1
-
-# Setup variables based on environemtn
-if dev:
-    toplDBFile = 'LocalTestnet.db'
-    servIP = '127.0.0.1'
-    debugBool = 1
-    ethModName = 'sendTransaction_Local'
-else:
-    toplDBFile = 'RinkebyTestnet.db'
-    servIP = '0.0.0.0'
-    debugBool = 0
-    ethModName = 'sendTransaction_Rinkeby'
-
-# Import ethereum module for sending the kyc TX
-sendTX = importlib.import_module(ethModName)
-
-# selfmade module for sending the ethereum transaction
-import sendTransaction_Rinkeby as sendTx 
+import traceback, datetime, os, string, random, importlib, jwt
 
 # Define error log location
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
@@ -49,7 +22,7 @@ ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
 
 # Define user database location
 project_dir = os.path.dirname(os.path.abspath(__file__))
-database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', toplDBFile))
+database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', 'topl_kyc_database.db'))
 
 # standard instantiantion of the api application through flask
 app = Flask(__name__)
@@ -62,6 +35,10 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 # Setup database
 db = flask_sqlalchemy.SQLAlchemy(app)
 
+# Setup variables based on environemtn
+ethNetwork = 'Rinkeby' if app.env == 'production' else 'Local'
+# Import ethereum module for sending the kyc TX
+sendTX = importlib.import_module('sendTransaction_' + ethNetwork)
 
 # Database model for saving form data
 class Participant(db.Model):
@@ -142,7 +119,7 @@ def kycProcess():
         else: 
             return jsonify({"success":False})
 
-    except Exception as e:
+    except Exception:
         # Handle exceptions to the process by creating a logfile
         with open(errFilePath(datetime.datetime.now()),'a+') as errFile:
             errFile.write(traceback.format_exc())
@@ -186,4 +163,4 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run(host=servIP,debug=debugBool)
+    app.run(host=('0.0.0.0' if app.env == 'production' else '127.0.0.1'))
