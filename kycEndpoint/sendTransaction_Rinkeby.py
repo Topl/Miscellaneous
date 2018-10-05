@@ -2,7 +2,7 @@ from web3 import Web3
 import json
 
 # Get API key for infura
-with open('./keys/pr_infuraRinkebyAPI.txt','r') as infura:
+with open('static/keys/pr_infuraRinkebyAPI.txt','r') as infura:
     apiKey = infura.read()
 
 ##Establish connection to Ethereum network
@@ -12,7 +12,7 @@ w3 = Web3(Web3.HTTPProvider('https://rinkeby.infura.io/v3/' + apiKey)) # for rin
 arbits_presale_addr = "0x4393CeF911B451ab098c6973a28C913326E9413E"
 
 ##ABI should be from the contract json created in the truffle build folder after migration
-with open('./abi/arbits_presale.json','r') as f:
+with open('static/abi/arbits_presale.json','r') as f:
     arbits_presale_abi = json.load(f)
     arbits_presale_abi = arbits_presale_abi['abi']
 
@@ -23,7 +23,7 @@ arbContract = w3.eth.contract(
     )
 
 def _getKey():
-    with open('./keys/pr_eth0_keyfile') as keyfile: 
+    with open('static/keys/pr_eth0_keyfile') as keyfile: 
         return w3.eth.account.privateKeyToAccount(w3.eth.account.decrypt(keyfile.read(), 'tZn%FKkHQ8MmCNv&Ng9m'))
 
 def main(user_addr):
