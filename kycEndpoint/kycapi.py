@@ -71,6 +71,15 @@ def verifyJWT(req):
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
+def get_eth_addr(payload):
+    form = payload['form_data']
+    if form['user_id'] == 'vip':
+        if form['country'] == 'US':
+            return #Ind 0 in DB#
+        else:
+            return #Next index in DB#
+    else:
+        return form['btc']
     
 ## Define default route that will check for US based IP.
 # If in US kick out to error page, if not allow to the KYC form
@@ -91,18 +100,21 @@ def kycProcess():
         # verify and retrieve JSON from JWT
         payload = verifyJWT(request)
 
+        # Get Ethereum address that should be assigned token rights
+        usr_eth_addr = get_eth_addr(payload)
+
         with open('db/form_dump','a+') as f:
             f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
 
         # send KYC request via Infura API if accepted, (if manual_review, deny, or repeated then skip)
-        tx_hash = eth_net.add_to_whitelist(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
+        tx_hash = eth_net.add_to_whitelist(usr_eth_addr) if payload['kyc_result'] == 'ACCEPT' else 0
 
         # construct database object and save participant data
         db.session.add(Participant(
             tid = payload['tid'],
             ip_addr = request.remote_addr,
             kyc_result = payload['kyc_result'],
-            eth_addr = payload['form_data']['btc'],
+            eth_addr = usr_eth_addr,
             user_id = payload['form_data']['user_id'],
             tx_hash = tx_hash,
             email = payload['form_data']['email'],
