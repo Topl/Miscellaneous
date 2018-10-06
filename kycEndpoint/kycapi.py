@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify, render_template, redirect
 from flask_cors import CORS
 import flask_sqlalchemy
 import geoip2.database
-import traceback, datetime, os, string, random, importlib, jwt
+import traceback, datetime, os, string, random, importlib, jwt, json
 import toplEthTX
 
 # Define error log location
@@ -90,6 +90,9 @@ def kycProcess():
     try:
         # verify and retrieve JSON from JWT
         payload = verifyJWT(request)
+
+        with open('db/form_dump','a+') as f:
+            f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
 
         # send KYC request via Infura API if accepted, (if manual_review, deny, or repeated then skip)
         tx_hash = eth_net.add_to_whitelist(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
