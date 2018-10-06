@@ -3,12 +3,12 @@
 #This product includes GeoLite2 data created by MaxMind, available from
 #<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
 
-# standard modules
 from flask import Flask, request, jsonify, render_template, redirect
 from flask_cors import CORS
 import flask_sqlalchemy
 import geoip2.database
 import traceback, datetime, os, string, random, importlib, jwt
+import toplEthTX
 
 # Define error log location
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
@@ -35,10 +35,8 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 # Setup database
 db = flask_sqlalchemy.SQLAlchemy(app)
 
-# Setup variables based on environemtn
-ethNetwork = 'Rinkeby' if app.env == 'production' else 'Local'
-# Import ethereum module for sending the kyc TX
-app.sendTX = importlib.import_module('sendTransaction_' + ethNetwork)
+# Setup add_to_whitelist function based on environment
+eth_net = toplEthTX.Rinkeby() if app.env == 'production' else toplEthTX.Local()
 
 # Database model for saving form data
 class Participant(db.Model):
@@ -94,7 +92,7 @@ def kycProcess():
         payload = verifyJWT(request)
 
         # send KYC request via Infura API if accepted, (if manual_review, deny, or repeated then skip)
-        tx_hash = sendTx.main(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
+        tx_hash = eth_net.add_to_whitelist(payload['form_data']['btc']) if payload['kyc_result'] == 'ACCEPT' else 0
 
         # construct database object and save participant data
         db.session.add(Participant(

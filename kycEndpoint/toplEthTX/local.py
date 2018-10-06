@@ -1,5 +1,5 @@
 from web3 import Web3
-import toplEthTX
+from toplEthTX.contracts import ABI
 
 class Local:
     def __init__(self):
@@ -7,10 +7,7 @@ class Local:
         self.w3 = Web3(Web3.HTTPProvider('http://localhost:7545')) # for local dev
 
         # Set contract addresses as deployed on ethereum network
-        self.arbits_presale_addr = "0x5b6c8af983e17bb4bdc987228a70165476e5e763" # replace this with the addr from deployment
-        
-        # Get ABI from the ABI class
-        self.abi = toplEthTX.contracts.ABI()
+        self.arbits_presale_addr = '0x49eeacd77d366f77959921f0a8ff201c07f9d94b' # replace this with the addr from deployment
 
     def add_to_whitelist(self, user_addr):
         # Set account to send from as the first account in the testnet list
@@ -20,7 +17,7 @@ class Local:
         to_addr = self.w3.toChecksumAddress(self.arbits_presale_addr)
 
         #Use the address of the deployed contract and the contract abi loaded from the json file to create the contract instance
-        contract = self.w3.eth.contract( address = to_addr, abi = self.abi.arbits_presale)
+        contract = self.w3.eth.contract( address = to_addr, abi = ABI().arbits_presale)
 
         # Send the transaction and get back the transaction hash
         tx_hash = contract.functions.add_to_whitelist(self.w3.toChecksumAddress(user_addr)).transact()
