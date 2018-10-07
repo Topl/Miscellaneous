@@ -3,13 +3,17 @@
 #This product includes GeoLite2 data created by MaxMind, available from
 #<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
 
-from flask import Flask, request, jsonify, render_template, redirect
+from flask import Flask, request, jsonify, render_template, redirect, Response
 from flask_cors import CORS
+from functools import wraps
 import flask_sqlalchemy
+import hashlib
 import geoip2.database
 import traceback, datetime, os, string, random, importlib, jwt, json
 import toplEthTX
 
+####################################################################################################################
+## General variable declarations
 # Define error log location
 formTime = lambda ts: ts.strftime("%Y.%m.%d_%H%M%S")
 errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
@@ -20,10 +24,21 @@ idmURL = 'https://regtech.identitymind.store/viewform/'
 # Define the geo-location IP data base file location
 ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
 
-# Define user database location
+# Define simple user authentication dictionary
+topl_users = {
+    "cb358ed5e505cbe336dbf2c2f1e90f5a2d0453cecde9c32d1f1a104ef2d9bcf3": "7f4d69e38043ee58a81636b922993661b2e2f9fa4d0ba0127f94d74b7477860c",
+    "cb0666d0948d66ccddb91e17df54834db2253d74bc26b8c7925b8e2c0bff836f": "2913b3c9f6f1fdf3cc961aa0a46f8b1613e0a9175a6d38cc83cae8ec8ef79165"
+}
+
+# lambda function to shorten hash function call
+hash_func = lambda str: hashlib.sha256(str.encode('utf-8')).hexdigest()
+
+# Define topl database location
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db', 'topl_kyc_database.db'))
 
+####################################################################################################################
+## Flask app setup
 # standard instantiantion of the api application through flask
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
@@ -38,6 +53,8 @@ db = flask_sqlalchemy.SQLAlchemy(app)
 # Setup add_to_whitelist function based on environment
 eth_net = toplEthTX.Rinkeby() if app.env == 'production' else toplEthTX.Local()
 
+####################################################################################################################
+## Database Models
 # Database model for saving form data
 class Participant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -56,7 +73,16 @@ class Participant(db.Model):
         return "<tid: {}, timestamp: {}, kyc: {}, eth: {}, tx_hash: {}, email: {}, country: {} >".format(
             self.tid, formTime(self.timestamp), self.kyc_result, self.eth_addr, self.tx_hash, self.email, self.addr_country)
 
-    
+class ToplAddr(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String(34), nullable=False)
+    used = db.Column(db.Boolean, nullable=False)
+
+    def __repr__(self):
+        return "<id: {}, address: {}, used: {}>".format(self.id, self.address, self.used)
+
+####################################################################################################################
+## Function Defintions
 ## This function will verify and return the payload from the JWT
 # Identity Mind public keys are available at https://regtech.identitymind.store/accounts/d/%20
 def verifyJWT(req):
@@ -80,7 +106,36 @@ def get_eth_addr(payload):
             return #Next index in DB#
     else:
         return form['btc']
-    
+
+def check_auth(username, password):
+    """This function is called to check if a username / password combination is valid."""
+    if hash_func(username) in topl_users:
+        if topl_users[hash_func(username)] == hash_func(password):
+            authBool = 1
+        else:
+            authBool = 0
+    else:
+        authBool = 0
+    return authBool
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
+####################################################################################################################
+## Flask Views 
 ## Define default route that will check for US based IP.
 # If in US kick out to error page, if not allow to the KYC form
 @app.route("/")
@@ -132,6 +187,20 @@ def kycProcess():
             errFile.write(traceback.format_exc())
         return jsonify({"success":False})
 
+# route for updating the investor ethereum addresses
+@app.route("/admin/uploadaddr", methods=['POST'])
+@requires_auth
+def upload():
+    addr_list = request.get_json()
+    # loop through dictionary and add to the db
+    for iter in range(0, len(addr_list)):
+        db.session.add(ToplAddr(
+            address = addr_list[iter]['address'],
+            used = False
+            )
+        )
+    db.session.commit()
+    return jsonify({"success":True})
 
 # for serving the general population particpating in the sale
 @app.route('/kyc/general')
@@ -141,6 +210,7 @@ def generalForm():
 
 # for serving fiat investors through a slightly different form
 @app.route('/kyc/vip')
+@requires_auth
 def investorForm():
     return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
 
@@ -167,6 +237,7 @@ def error():
 
 # Default route
 @app.route('/home')
+@requires_auth
 def home():
     return render_template('index.html')
 

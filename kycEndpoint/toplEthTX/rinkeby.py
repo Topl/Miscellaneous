@@ -21,7 +21,7 @@ class Rinkeby:
 
     def _getKey(self):
         with open('toplEthTX/keys/pr_eth0_keyfile') as keyfile: 
-            return self.w3.eth.account.privateKeyToAccount(self.w3.eth.account.decrypt(keyfile.read(), 'Xja^8gS7TQu4D#y77MM3'))
+            return self.w3.eth.account.privateKeyToAccount(self.w3.eth.account.decrypt(keyfile.read(), 'WFVNgDUSqy3jE9DK623N'))
 
     def add_to_whitelist(self, user_addr):
         toplAcct = self._getKey()
