@@ -220,7 +220,7 @@ def accept():
     return render_template('accept.html')
 
 @app.route('/result/accept-vip')
-def accept():
+def accept_vip():
     return render_template('accept-vip.html')
 
 
