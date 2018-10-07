@@ -153,7 +153,7 @@ def kycProcess():
         if payload['form_data']['user_id'] == 'vip':
             # use fixed address for US investors
             if payload['form_data']['country'] == 'US':
-                usr_eth_addr = ToplAddr.query.get(1)
+                usr_eth_addr = ToplAddr.query.get(1).address
 
             # use one of the generated address for non-US investors, then set used to True
             else:
