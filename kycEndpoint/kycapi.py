@@ -26,8 +26,8 @@ ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
 
 # Define simple user authentication dictionary
 topl_users = {
-    "cb358ed5e505cbe336dbf2c2f1e90f5a2d0453cecde9c32d1f1a104ef2d9bcf3": "7f4d69e38043ee58a81636b922993661b2e2f9fa4d0ba0127f94d74b7477860c",
-    "cb0666d0948d66ccddb91e17df54834db2253d74bc26b8c7925b8e2c0bff836f": "2913b3c9f6f1fdf3cc961aa0a46f8b1613e0a9175a6d38cc83cae8ec8ef79165"
+    "topl_admin": "7f4d69e38043ee58a81636b922993661b2e2f9fa4d0ba0127f94d74b7477860c",
+    "topl_vip": "2913b3c9f6f1fdf3cc961aa0a46f8b1613e0a9175a6d38cc83cae8ec8ef79165"
 }
 
 # lambda function to shorten hash function call
@@ -93,15 +93,14 @@ def verifyJWT(req):
     with open('static/keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
 
-
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-def get_eth_addr(payload):
+def get_eth_addr(payload, topl_addr):
     form = payload['form_data']
     if form['user_id'] == 'vip':
         if form['country'] == 'US':
-            return #Ind 0 in DB#
+            return topl.query.get(1)
         else:
             return #Next index in DB#
     else:
@@ -109,7 +108,7 @@ def get_eth_addr(payload):
 
 def check_auth(username, password):
     """This function is called to check if a username / password combination is valid."""
-    if hash_func(username) in topl_users:
+    if username in topl_users:
         if topl_users[hash_func(username)] == hash_func(password):
             authBool = 1
         else:
@@ -156,12 +155,23 @@ def kycProcess():
         payload = verifyJWT(request)
 
         # Get Ethereum address that should be assigned token rights
-        usr_eth_addr = get_eth_addr(payload)
+        if payload['form_data']['user_id'] == 'vip':
+            # use fixed address for US investors
+            if payload['form_data']['country'] == 'US':
+                topl_addr = ToplAddr.query.get(1)
+            # use one of the generated address for non-US investors
+            else:
+                topl_addr = ToplAddr.query.filter_by(used=False).first()
 
-        with open('db/form_dump','a+') as f:
-            f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
+            usr_eth_addr = topl_addr.address
+        else:
+            # return user input address
+            usr_eth_addr = payload['form_data']['btc']
 
-        # send KYC request via Infura API if accepted, (if manual_review, deny, or repeated then skip)
+        #with open('db/form_dump','a+') as f:
+        #    f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
+
+        # send KYC request via Infura API if KYC was accepted, (if manual_review, deny, or repeated then skip)
         tx_hash = eth_net.add_to_whitelist(usr_eth_addr) if payload['kyc_result'] == 'ACCEPT' else 0
 
         # construct database object and save participant data

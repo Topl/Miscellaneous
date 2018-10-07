@@ -6,9 +6,9 @@ f = open('kycEndpoint/static/keys/privateKey.pem')
 prKey = f.read()
 f.close()
 
-f = open('kycEndpoint/static/keys/publicKey.pem')
-puKey = f.read()
-f.close()
+# f = open('kycEndpoint/static/keys/publicKey.pem')
+# puKey = f.read()
+# f.close()
 
 objToJWT = {
     "form_data": {
@@ -37,7 +37,7 @@ objToJWT = {
         "ssn": "",
         "state": "DC",
         "street": "1928 help rd.",
-        "user_id": "",
+        "user_id": "vip",
         "version": "2",
         "zip_code": "77098"
     },
@@ -47,7 +47,7 @@ objToJWT = {
 
 
 encodedJWT = jwt.encode(objToJWT, prKey, algorithm='RS256')
-decodedJWT = jwt.decode(encodedJWT, puKey, algorithms='RS256')
+#decodedJWT = jwt.decode(encodedJWT, puKey, algorithms='RS256')
 
 with open('encodedJWT','w') as f:
     f.write(encodedJWT.decode('utf-8'))
