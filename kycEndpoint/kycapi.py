@@ -70,8 +70,8 @@ class Participant(db.Model):
     tx_hash = db.Column(db.String(45), nullable=False)
 
     def __repr__(self):
-        return "<tid: {}, timestamp: {}, kyc: {}, eth: {}, tx_hash: {}, email: {}, country: {} >".format(
-            self.tid, formTime(self.timestamp), self.kyc_result, self.eth_addr, self.tx_hash, self.email, self.addr_country)
+        return "<id: {}, tid: {}, timestamp: {}, ip_addr: {}, kyc_result: {}, eth_addr: {}, user_id: {}, tx_hash: {}, email: {}, addr_country: {}>".format(
+            self.id, self.tid, formTime(self.timestamp), self.ip_addr, self.kyc_result, self.eth_addr, self.user_id, self.tx_hash, self.email, self.addr_country)
 
 class ToplAddr(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -93,23 +93,10 @@ def verifyJWT(req):
     with open('static/keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
 
-def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
-
-def get_eth_addr(payload, topl_addr):
-    form = payload['form_data']
-    if form['user_id'] == 'vip':
-        if form['country'] == 'US':
-            return topl.query.get(1)
-        else:
-            return #Next index in DB#
-    else:
-        return form['btc']
-
 def check_auth(username, password):
     """This function is called to check if a username / password combination is valid."""
     if username in topl_users:
-        if topl_users[hash_func(username)] == hash_func(password):
+        if topl_users[username] == hash_func(password):
             authBool = 1
         else:
             authBool = 0
@@ -158,12 +145,15 @@ def kycProcess():
         if payload['form_data']['user_id'] == 'vip':
             # use fixed address for US investors
             if payload['form_data']['country'] == 'US':
-                topl_addr = ToplAddr.query.get(1)
-            # use one of the generated address for non-US investors
-            else:
-                topl_addr = ToplAddr.query.filter_by(used=False).first()
+                usr_eth_addr = ToplAddr.query.get(1)
 
-            usr_eth_addr = topl_addr.address
+            # use one of the generated address for non-US investors, then set used to True
+            else:
+                addr_rec = ToplAddr.query.filter_by(used=False).first()
+                usr_eth_addr = addr_rec.address
+                addr_rec.used = True
+                db.session.commit()
+
         else:
             # return user input address
             usr_eth_addr = payload['form_data']['btc']
@@ -215,7 +205,7 @@ def upload():
 # for serving the general population particpating in the sale
 @app.route('/kyc/general')
 def generalForm():
-    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + id_generator(10)))
+    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=general"))
 
 
 # for serving fiat investors through a slightly different form

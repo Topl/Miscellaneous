@@ -2,7 +2,7 @@ import jwt
 # docs for pyJWT https://pyjwt.readthedocs.io/en/latest/usage.html
 # This script is to make sure that I can correctly read in the key files and generate a JWT for use in sending to the API through postman
 
-f = open('kycEndpoint/static/keys/privateKey.pem')
+f = open('privateKey.pem')
 prKey = f.read()
 f.close()
 
@@ -16,7 +16,7 @@ objToJWT = {
         "btc": "0x2e0051c32F8B36D94F81c05A3fA5be119Ed768E0",
         "btc_type": "ETH",
         "city": "detroit",
-        "country": "US",
+        "country": "FR",
         "dfp": "eyJJRHMiOnsiZGV2aWNlSUQiOiIxOXpEVEc4dW0yS21JaWE5cDdjSE9aR2ZoRUciLCJjb29raWVJRCI6IjE5ekRUR3BYVHJxdF$",
         "dob": "2005-01-01",
         "docCountry": "US",
@@ -37,7 +37,7 @@ objToJWT = {
         "ssn": "",
         "state": "DC",
         "street": "1928 help rd.",
-        "user_id": "vip",
+        "user_id": "genpop",
         "version": "2",
         "zip_code": "77098"
     },

@@ -3,6 +3,13 @@ import kycapi
 kycapi.flask_sqlalchemy.orm.attributes.instance_dict(kycapi.Participant.query.get(1))
 pdict = lambda x: kycapi.flask_sqlalchemy.orm.attributes.instance_dict(kycapi.Participant.query.get(x))
 
+## Convert entire table to dictionary list
+p = kycapi.Participant
+p_dict = lambda x: kycapi.flask_sqlalchemy.orm.attributes.instance_dict(p.query.get(x))
+p_dict_list = []
+for iter in range(0,p.query.count()):
+    p_dict_list.append(p_dict(iter + 1))
+
 ## Get all rows
 Participant.query.all() 
 or
