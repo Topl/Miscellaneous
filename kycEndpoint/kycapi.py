@@ -138,8 +138,16 @@ def index(ipBool=0):
 @app.route("/kyc", methods=["POST"])
 def kycProcess():
     try:
+        # For troubleshooting when IDM send me data
+        with open('Logs/access_log','a+') as a_log:
+            a_log.write(formTime(datetime.datetime.utcnow()) + '\n')
+
         # verify and retrieve JSON from JWT
         payload = verifyJWT(request)
+
+        # For troubleshooting what IDM sends me
+        #with open('db/form_dump','a+') as f:
+        #    f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
 
         # Get Ethereum address that should be assigned token rights
         if payload['form_data']['user_id'] == 'vip':
@@ -157,9 +165,6 @@ def kycProcess():
         else:
             # return user input address
             usr_eth_addr = payload['form_data']['btc']
-
-        #with open('db/form_dump','a+') as f:
-        #    f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
 
         # send KYC request via Infura API if KYC was accepted, (if manual_review, deny, or repeated then skip)
         tx_hash = eth_net.add_to_whitelist(usr_eth_addr) if payload['kyc_result'] == 'ACCEPT' else 0
