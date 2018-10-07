@@ -237,7 +237,6 @@ def error():
 
 # Default route
 @app.route('/home')
-@requires_auth
 def home():
     return render_template('index.html')
 
