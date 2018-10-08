@@ -217,21 +217,22 @@ def upload():
 def generalForm():
     session_id = id_generator(10)
     session['session_id'] = session_id
-    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
-
+    #return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
+    return render_template('form_host.html', iframeURL=(idmURL + "9ypwm/?user_id=" + session_id))
 
 # for serving fiat investors through a slightly different form
 @app.route('/kyc/vip')
 @requires_auth
 def investorForm():
-    return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
+    #return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
+    return render_template('form_host.html', iframeURL=(idmURL + "gxq27/?user_id=vip"))
 
 
 @app.route('/result/accept')
 def accept():
     try:
-        tx_hash = Participant.query.filter_by(user_id=session.get('session_id')).first().tx_hash
-        tx_url = etherscan_url + tx_hash
+        tx_url = etherscan_url + Participant.query.filter_by(user_id=session.get('session_id')).first().tx_hash
+        #tx_url = etherscan_url + Participant.query.get(1).tx_hash
     except Exception:
         tx_hash = ''
         tx_url = ''
@@ -239,7 +240,11 @@ def accept():
         with open(errFilePath(datetime.datetime.now()),'a+') as errFile:
             errFile.write(traceback.format_exc())
     finally:
-        return render_template('accept.html', tx_url = tx_url, tx_hash = tx_hash)
+        return render_template('accept.html', tx_url = tx_url)
+
+@app.route('/iconiq/registration')
+def iconiq_register():
+    return render_template('iconiq_registration.html')
 
 @app.route('/result/accept-vip')
 def accept_vip():
@@ -264,7 +269,7 @@ def error():
 # Default route
 @app.route('/home')
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 if __name__ == '__main__':

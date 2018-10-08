@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-10">
+        <div class="bg-primary rounded" style="height:80px">
+            <div class="row h-100">
+                <div class="col my-auto">
+                    <span class="oi oi-cog text-white" title="cog" aria-hidden="true" style="font-size:3vw"></span>
+                </div>
+                <div class="col-8 my-auto">
+                    <div class="long-banner text-center font-weight-bold text-white">
+                        Iconiq Registration
+                    </div>
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+        <div>
+            <h5 class="text-left p-3">
+                Thank you for your interest in participating in the Topl presale! To verify that you are an Iconiq
+                token holder please enter you address in the field below.
+                <br>
+                <br>
+                Upon verification of your ICNQ token holdings we will update our smart contracts to allow you to
+                receive the Iconiq exclusive discount.
+            </h5>
+            <h4>
+            <label for="basic-url">Ethereum Address Holding ICNQ Tokens</label>
+            </h4>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="0x0000000000000000000000000000000000000000"
+                    aria-label="ICNQ address" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Verify Ethereum address</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
