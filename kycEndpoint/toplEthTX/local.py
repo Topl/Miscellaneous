@@ -23,4 +23,3 @@ class Local:
         tx_hash = contract.functions.add_to_whitelist(self.w3.toChecksumAddress(user_addr)).transact()
 
         return Web3.toHex(tx_hash)
-        

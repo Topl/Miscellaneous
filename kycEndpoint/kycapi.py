@@ -3,14 +3,12 @@
 #This product includes GeoLite2 data created by MaxMind, available from
 #<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
 
-from flask import Flask, request, jsonify, render_template, redirect, Response
+from flask import Flask, request, jsonify, render_template, redirect, Response, session
 from flask_cors import CORS
 from functools import wraps
 import flask_sqlalchemy
-import hashlib
-import geoip2.database
+import hashlib, geoip2.database, toplEthTX
 import traceback, datetime, os, string, random, importlib, jwt, json
-import toplEthTX
 
 ####################################################################################################################
 ## General variable declarations
@@ -20,6 +18,9 @@ errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 
 # Define the IDM form URL
 idmURL = 'https://regtech.identitymind.store/viewform/'
+
+# Define transaction lookup base URL
+etherscan_url = 'https://rinkeby.etherscan.io/tx/'
 
 # Define the geo-location IP data base file location
 ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
@@ -43,6 +44,7 @@ database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.urandom(20)
 
 # applies the Access-Control-Allow-Origin property to the api route as required by IDM
 CORS(app, resources={r"/kyc": {"origins":"*"}})
@@ -92,6 +94,9 @@ def verifyJWT(req):
     reqJSON = req.get_json()
     with open('static/keys/' + pubKeyPath) as publicKey:
         return jwt.decode(reqJSON['jwtresponse'], publicKey.read(), algorithms='RS256')
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def check_auth(username, password):
     """This function is called to check if a username / password combination is valid."""
@@ -210,7 +215,9 @@ def upload():
 # for serving the general population particpating in the sale
 @app.route('/kyc/general')
 def generalForm():
-    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=general"))
+    session_id = id_generator(10)
+    session['session_id'] = session_id
+    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
 
 
 # for serving fiat investors through a slightly different form
@@ -222,7 +229,17 @@ def investorForm():
 
 @app.route('/result/accept')
 def accept():
-    return render_template('accept.html')
+    try:
+        tx_hash = Participant.query.filter_by(user_id=session.get('session_id')).first().tx_hash
+        tx_url = etherscan_url + tx_hash
+    except Exception:
+        tx_hash = ''
+        tx_url = ''
+    # Handle exceptions to the process by creating a logfile with the full traceback
+        with open(errFilePath(datetime.datetime.now()),'a+') as errFile:
+            errFile.write(traceback.format_exc())
+    finally:
+        return render_template('accept.html', tx_url = tx_url, tx_hash = tx_hash)
 
 @app.route('/result/accept-vip')
 def accept_vip():
