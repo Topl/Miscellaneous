@@ -28,7 +28,8 @@ ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
 # Define simple user authentication dictionary
 topl_users = {
     "topl_admin": "7f4d69e38043ee58a81636b922993661b2e2f9fa4d0ba0127f94d74b7477860c",
-    "topl_vip": "2913b3c9f6f1fdf3cc961aa0a46f8b1613e0a9175a6d38cc83cae8ec8ef79165"
+    "topl_vip": "2913b3c9f6f1fdf3cc961aa0a46f8b1613e0a9175a6d38cc83cae8ec8ef79165",
+    "topl_test": "feb14492c404bd9446317fd6c6e216bd719375e23331ce6093ee5524cc17bbdc"
 }
 
 # lambda function to shorten hash function call
