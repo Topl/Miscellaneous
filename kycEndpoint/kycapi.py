@@ -136,7 +136,7 @@ def index(ipBool=0):
     except:
         pass
     finally:
-        return redirect('/error') if ipBool else redirect('/kyc/general')     
+        return redirect('/error') if ipBool else redirect('/kyc/general')
 
 
 ## setup the KYC route
@@ -217,15 +217,15 @@ def upload():
 def generalForm():
     session_id = id_generator(10)
     session['session_id'] = session_id
-    #return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
-    return render_template('form_host.html', iframeURL=(idmURL + "9ypwm/?user_id=" + session_id))
+    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
+    #return render_template('form_host.html', iframeURL=(idmURL + "9ypwm/?user_id=" + session_id))
 
 # for serving fiat investors through a slightly different form
 @app.route('/kyc/vip')
 @requires_auth
 def investorForm():
-    #return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
-    return render_template('form_host.html', iframeURL=(idmURL + "gxq27/?user_id=vip"))
+    return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
+    #return render_template('form_host.html', iframeURL=(idmURL + "gxq27/?user_id=vip"))
 
 
 @app.route('/result/accept')
