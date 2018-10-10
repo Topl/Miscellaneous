@@ -9,6 +9,6 @@ kycEndpoint/toplEthTx/settings.py
 *.pyc
 *.zip
 kycEndpoint/Logs/
-kycEndpoint/db/
+kycEndpoint/db/topl*
 *.env
 testingFunctions/pr*
