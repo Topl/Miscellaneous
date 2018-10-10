@@ -130,7 +130,7 @@ def requires_auth(f):
 ## Flask Views - Production
 @app.route("/")
 def index():
-    return render_template('home.html')
+    return render_template('index.html')
 
 ## setup the KYC route
 @app.route("/kyc", methods=["POST"])
@@ -268,6 +268,10 @@ def ip_error():
     return render_template('ip-error.html')
 
 # Test form routes
+@app.route('/testform/home')
+def test_home():
+    return render_template('test_home.html')
+
 @app.route('/testform/general')
 def test_generalForm():
     return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
