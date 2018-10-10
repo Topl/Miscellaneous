@@ -220,14 +220,12 @@ def generalForm():
         else:
             session_id = id_generator(10)
             session['session_id'] = session_id
-            #return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
             return render_template('form_host.html', iframeURL=(idmURL + "9ypwm/?user_id=" + session_id))
 
 # for serving fiat investors through a slightly different form
 @app.route('/kyc/vip')
 @requires_auth
 def investorForm():
-    #return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
     return render_template('form_host.html', iframeURL=(idmURL + "gxq27/?user_id=vip"))
 
 # Result pages
@@ -256,7 +254,7 @@ def iconiq_register():
         if True:
         #if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
             icnq_response = 'success'
-            tx_url = etherscan_url
+            tx_url = etherscan_url + eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
         else:
             icnq_response = 'failure'
 
