@@ -214,14 +214,14 @@ def upload():
 # for serving the general population particpating in the sale
 # If in US kick out to error page, if not allow to the KYC form
 @app.route('/kyc/general')
-def generalForm(ipBool=0):
+def generalForm(ipBool=False):
     try:
         ipBool = ipDB.country(str(request.remote_addr)).country.iso_code == 'US'
     except:
         pass
     finally:
         if ipBool:
-            redirect('/ip_error')
+            return redirect('/ip_error')
         else:
             session_id = id_generator(10)
             session['session_id'] = session_id
