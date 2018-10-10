@@ -127,18 +127,10 @@ def requires_auth(f):
     return decorated
 
 ####################################################################################################################
-## Flask Views 
-## Define default route that will check for US based IP.
-# If in US kick out to error page, if not allow to the KYC form
+## Flask Views - Production
 @app.route("/")
-def index(ipBool=0):
-    try:
-        ipBool = ipDB.country(str(request.remote_addr)).country.iso_code == 'US'
-    except:
-        pass
-    finally:
-        return redirect('/error') if ipBool else redirect('/kyc/general')
-
+def index():
+    return render_template('home.html')
 
 ## setup the KYC route
 @app.route("/kyc", methods=["POST"])
@@ -167,13 +159,15 @@ def kycProcess():
                 usr_eth_addr = addr_rec.address
                 addr_rec.used = True
                 db.session.commit()
-
         else:
             # return user input address
             usr_eth_addr = payload['form_data']['btc']
 
         # send KYC request via Infura API if KYC was accepted, (if manual_review, deny, or repeated then skip)
-        tx_hash = eth_net.add_to_whitelist(usr_eth_addr) if payload['kyc_result'] == 'ACCEPT' else 0
+        if (usr_eth_addr not ToplAddr.query.get(1).address) and (payload['kyc_result'] == 'ACCEPT'):
+            tx_hash = eth_net.add_to_whitelist(usr_eth_addr)
+        else:
+            tx_hash = 0
 
         # construct database object and save participant data
         db.session.add(Participant(
@@ -214,12 +208,21 @@ def upload():
     return jsonify({"success":True})
 
 # for serving the general population particpating in the sale
+# If in US kick out to error page, if not allow to the KYC form
 @app.route('/kyc/general')
 def generalForm():
-    session_id = id_generator(10)
-    session['session_id'] = session_id
-    #return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
-    return render_template('form_host.html', iframeURL=(idmURL + "9ypwm/?user_id=" + session_id))
+    try:
+        ipBool = ipDB.country(str(request.remote_addr)).country.iso_code == 'US'
+    except:
+        pass
+    finally:
+        if ipBool:
+            redirect('/ip_error')
+        else:
+            session_id = id_generator(10)
+            session['session_id'] = session_id
+            #return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
+            return render_template('form_host.html', iframeURL=(idmURL + "9ypwm/?user_id=" + session_id))
 
 # for serving fiat investors through a slightly different form
 @app.route('/kyc/vip')
@@ -228,7 +231,7 @@ def investorForm():
     #return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
     return render_template('form_host.html', iframeURL=(idmURL + "gxq27/?user_id=vip"))
 
-
+# Result pages
 @app.route('/result/accept')
 def accept():
     try:
@@ -251,27 +254,28 @@ def iconiq_register():
 def accept_vip():
     return render_template('accept-vip.html')
 
-
 @app.route('/result/review')
 def review():
     return render_template('review.html')
-
 
 @app.route('/result/deny')
 def deny():
     return render_template('deny.html')
 
+# Error page for IP address in US
+@app.route('/ip_error')
+def ip_error():
+    return render_template('ip-error.html')
 
-@app.route('/error')
-def error():
-    return render_template('error.html')
+# Test form routes
+@app.route('/testform/general')
+def test_generalForm():
+    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
 
-
-# Default route
-@app.route('/home')
-def home():
-    return render_template('home.html')
-
+@app.route('/testform/vip')
+@requires_auth
+def test_investorForm():
+    return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
 
 if __name__ == '__main__':
     app.run(host=('0.0.0.0' if app.env == 'production' else '127.0.0.1'))
