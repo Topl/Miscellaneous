@@ -53,7 +53,7 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 # Setup add_to_whitelist function based on environment
-eth_net = toplEthTX.Rinkeby() if app.env == 'production' else toplEthTX.Local()
+eth_net = toplEthTX.Rinkeby() if app.env != 'production' else toplEthTX.Local()
 
 ####################################################################################################################
 ## Database Models
@@ -249,14 +249,18 @@ def accept():
 def iconiq_register():
     icnq_response = ''
     placeholder_addr = "0x0000000000000000000000000000000000000000"
-    form_in = 'foo'
+    tx_url = ''
 
     if request.method == 'POST':
-        if eth_net.check_icnq_balance(request.form.get('eth_addr'))
-        form_in = request.form.get('eth_addr')
+        placeholder_addr = ''
+        if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
+            icnq_response = 'success'
+            tx_url = etherscan_url
+        else:
+            icnq_response = 'failure'
 
     return render_template('iconiq_registration.html',
-         disp_response = icnq_response, disp_addr = placeholder_addr, disp_in = form_in)
+         disp_response = icnq_response, disp_addr = placeholder_addr, tx_url = tx_url)
 
 @app.route('/result/accept-vip')
 def accept_vip():
