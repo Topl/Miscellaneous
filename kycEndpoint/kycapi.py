@@ -53,7 +53,7 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 # Setup add_to_whitelist function based on environment
-eth_net = toplEthTX.Rinkeby() if app.env != 'production' else toplEthTX.Local()
+eth_net = toplEthTX.Rinkeby() if app.env == 'production' else toplEthTX.Local()
 
 ####################################################################################################################
 ## Database Models
@@ -251,8 +251,7 @@ def iconiq_register():
 
     if request.method == 'POST':
         placeholder_addr = ''
-        if True:
-        #if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
+        if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
             icnq_response = 'success'
             tx_url = etherscan_url + eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
         else:
