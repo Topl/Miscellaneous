@@ -132,64 +132,67 @@ def index():
     return render_template('index.html')
 
 ## setup the KYC route
-@app.route("/kyc", methods=["POST"])
+@app.route("/kyc", methods=["GET","POST"])
 def kycProcess():
-    try:
-        # For troubleshooting when IDM send me data
-        with open('Logs/access_log','a+') as a_log:
-            a_log.write(formTime(datetime.datetime.utcnow()) + '\n')
+    if request.method == 'GET':
+        return redirect('/kyc/general')
+    else:
+        try:
+            # For troubleshooting when IDM send me data
+            with open('Logs/access_log','a+') as a_log:
+                a_log.write(formTime(datetime.datetime.utcnow()) + '\n')
 
-        # verify and retrieve JSON from JWT
-        payload = verifyJWT(request)
+            # verify and retrieve JSON from JWT
+            payload = verifyJWT(request)
 
-        # For troubleshooting what IDM sends me
-        #with open('db/form_dump','a+') as f:
-        #    f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
+            # For troubleshooting what IDM sends me
+            #with open('db/form_dump','a+') as f:
+            #    f.write('\n\n' + json.dumps(payload, sort_keys=True, indent=4))
 
-        # Get Ethereum address that should be assigned token rights
-        if payload['form_data']['user_id'] == 'vip':
-            # use fixed address for US investors
-            if payload['form_data']['country'] == 'US':
-                usr_eth_addr = ToplAddr.query.get(1).address
+            # Get Ethereum address that should be assigned token rights
+            if payload['form_data']['user_id'] == 'vip':
+                # use fixed address for US investors
+                if payload['form_data']['country'] == 'US':
+                    usr_eth_addr = ToplAddr.query.get(1).address
 
-            # use one of the generated address for non-US investors, then set used to True
+                # use one of the generated address for non-US investors, then set used to True
+                else:
+                    addr_rec = ToplAddr.query.filter_by(used=False).first()
+                    usr_eth_addr = addr_rec.address
+                    addr_rec.used = True
+                    db.session.commit()
             else:
-                addr_rec = ToplAddr.query.filter_by(used=False).first()
-                usr_eth_addr = addr_rec.address
-                addr_rec.used = True
-                db.session.commit()
-        else:
-            # return user input address
-            usr_eth_addr = payload['form_data']['btc']
+                # return user input address
+                usr_eth_addr = payload['form_data']['btc']
 
-        # send KYC request via Infura API if KYC was accepted, (if manual_review, deny, or repeated then skip)
-        if (usr_eth_addr != ToplAddr.query.get(1).address) and (payload['kyc_result'] == 'ACCEPT'):
-            tx_hash = eth_net.add_to_whitelist(usr_eth_addr)
-        else:
-            tx_hash = 0
+            # send KYC request via Infura API if KYC was accepted, (if manual_review, deny, or repeated then skip)
+            if (usr_eth_addr != ToplAddr.query.get(1).address) and (payload['kyc_result'] == 'ACCEPT'):
+                tx_hash = eth_net.add_to_whitelist(usr_eth_addr)
+            else:
+                tx_hash = 0
 
-        # construct database object and save participant data
-        db.session.add(Participant(
-            tid = payload['tid'],
-            ip_addr = request.remote_addr,
-            kyc_result = payload['kyc_result'],
-            eth_addr = usr_eth_addr,
-            user_id = payload['form_data']['user_id'],
-            tx_hash = tx_hash,
-            email = payload['form_data']['email'],
-            addr_country = payload['form_data']['country'],
-            doc_country = payload['form_data']['docCountry']
+            # construct database object and save participant data
+            db.session.add(Participant(
+                tid = payload['tid'],
+                ip_addr = request.remote_addr,
+                kyc_result = payload['kyc_result'],
+                eth_addr = usr_eth_addr,
+                user_id = payload['form_data']['user_id'],
+                tx_hash = tx_hash,
+                email = payload['form_data']['email'],
+                addr_country = payload['form_data']['country'],
+                doc_country = payload['form_data']['docCountry']
+                )
             )
-        )
-        db.session.commit()
+            db.session.commit()
 
-        return jsonify({"success":True})
+            return jsonify({"success":True})
 
-    except Exception:
-        # Handle exceptions to the process by creating a logfile with the full traceback
-        with open(errFilePath(datetime.datetime.now()),'a+') as errFile:
-            errFile.write(traceback.format_exc())
-        return jsonify({"success":False})
+        except Exception:
+            # Handle exceptions to the process by creating a logfile with the full traceback
+            with open(errFilePath(datetime.datetime.now()),'a+') as errFile:
+                errFile.write(traceback.format_exc())
+            return jsonify({"success":False})
 
 # route for updating the investor ethereum addresses
 @app.route("/admin/uploadaddr", methods=['POST'])
@@ -209,7 +212,7 @@ def upload():
 # for serving the general population particpating in the sale
 # If in US kick out to error page, if not allow to the KYC form
 @app.route('/kyc/general')
-def generalForm():
+def generalForm(ipBool=0):
     try:
         ipBool = ipDB.country(str(request.remote_addr)).country.iso_code == 'US'
     except:
@@ -279,10 +282,12 @@ def ip_error():
 
 # Test form routes
 @app.route('/testform/home')
+@requires_auth
 def test_home():
     return render_template('test_home.html')
 
 @app.route('/testform/general')
+@requires_auth
 def test_generalForm():
     return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
 
