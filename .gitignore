@@ -4,9 +4,11 @@ kycEndpoint/apienv/
 *.sock
 kycEndpoint/__pycache__/
 kycEndpoint/.vscode/
-kycEndpoint/toplEthTX/keys/pr*
+kycEndpoint/toplEthTX/pr*
+kycEndpoint/toplEthTx/settings.py
 *.pyc
+*.zip
 kycEndpoint/Logs/
-kycEndpoint/db/
+kycEndpoint/db/topl*
 *.env
 testingFunctions/pr*

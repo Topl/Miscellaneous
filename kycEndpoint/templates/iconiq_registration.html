@@ -9,14 +9,14 @@
                     <span class="oi oi-cog text-white" title="cog" aria-hidden="true" style="font-size:3vw"></span>
                 </div>
                 <div class="col-8 my-auto">
-                    <div class="long-banner text-center font-weight-bold text-white">
+                    <div class="banner text-center font-weight-bold text-white">
                         Iconiq Registration
                     </div>
                 </div>
                 <div class="col"></div>
             </div>
         </div>
-        <div>
+        <div class="border rounded-bottom p-3 bg-light">
             <h5 class="text-left p-3">
                 Thank you for your interest in participating in the Topl presale! To verify that you are an Iconiq
                 token holder please enter you address in the field below.
@@ -26,16 +26,81 @@
                 receive the Iconiq exclusive discount.
             </h5>
             <h4>
-            <label for="basic-url">Ethereum Address Holding ICNQ Tokens</label>
+                <label for="basic-url">Ethereum Address Holding ICNQ Tokens</label>
             </h4>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="0x0000000000000000000000000000000000000000"
-                    aria-label="ICNQ address" aria-describedby="button-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Verify Ethereum address</button>
+            <form method="POST" action="/iconiq/registration">
+                <div class="input-group mb-3">
+
+                    <input type="text" class="form-control" placeholder="{{ disp_addr }}" aria-label="ICNQ address"
+                        aria-describedby="button-addon2" name="eth_addr">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Verify Ethereum
+                            address</button>
+                    </div>
                 </div>
+            </form>
+            <br>
+            {% if disp_response == 'success' %}
+            <div class="row justify-content-center">
+                <div class="bg-success col-12 rounded" style="height:80px">
+                    <div class="row h-100">
+                        <div class="col my-auto">
+                            <span class="oi oi-circle-check" title="circle-check" aria-hidden="true" style="font-size:3vw"></span>
+                        </div>
+                        <div class="col my-auto">
+                            <div class="banner text-center font-weight-bold">
+                                Success!
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                </div>
+
+                <h5 class="text-justify p-3 col-11">
+                    Thank you for verifying your ICNQ holdings! We have confirmed your balance and you will be eligible to receive your 15% bonus as soon as this transaction is confirmed on the Ethereum chain.
+                    <br>
+                    <span class="d-inline-block text-truncate" style="max-width: 100%;">
+                        <a href="{{ tx_url }}">{{ tx_url }}</a>
+                    </span>
+                    <br>
+                    <br>
+                    Thank you for being a part of the Topl presale.
+                    <br>
+                    <a href="https://presale.topl.co">https://presale.topl.co</a>
+                </h5>
             </div>
         </div>
+        {% elif disp_response == 'failure' %}
+        <div class="row justify-content-center">
+            <div class="bg-danger col-12 rounded" style="height:80px">
+                <div class="row h-100">
+                    <div class="col my-auto">
+                        <span class="oi oi-x" title="circle-x" aria-hidden="true" style="font-size:3vw"></span>
+                    </div>
+                    <div class="col my-auto">
+                        <div class="banner text-center font-weight-bold">
+                            Failure!
+                        </div>
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+            <h5 class="text-justify p-3 col-11">
+                Unfortunately the address you entered does not hold enough ICNQ to receive a bonus. If you would like
+                to receive the 15% Iconiq bonus, please be sure that you hold at least 100 ICNQ.
+                <br>
+                <br>
+                If you have any questions, you may contact us at <a href="info@topl.me">info@topl.me</a>
+                <br>
+                <br>
+                We thank you for your support.
+                <br>
+                <a href="https://presale.topl.co">https://presale.topl.co</a>
+            </h5>
+        </div>
     </div>
+    {% endif %}
+</div>
+</div>
 </div>
 {% endblock %}
