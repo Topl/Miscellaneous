@@ -2,7 +2,7 @@ from web3 import Web3
 from toplEthTX.contracts import ABI
 import toplEthTX.settings as settings
 
-class Rinkeby:
+class Mainnet:
     def __init__(self):
         ##Establish connection to Ethereum network
         self.w3 = Web3(Web3.HTTPProvider(settings.MAINNET_API_URL))  # for rinkeby testing
