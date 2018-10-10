@@ -41,7 +41,7 @@ database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db
 ####################################################################################################################
 ## Flask app setup
 # standard instantiantion of the api application through flask
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/images')
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(20)
@@ -291,6 +291,26 @@ def test_generalForm():
 @requires_auth
 def test_investorForm():
     return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
+
+@app.route('/images/participate.png')
+def get_images_participate():
+    return app.send_static_file('img/participate.png')
+
+@app.route('/images/balance.png')
+def get_images_balance():
+    return app.send_static_file('img/balance.png')
+
+@app.route('/images/use-tokens.png')
+def get_images_usetokens():
+    return app.send_static_file('img/use-tokens.png')
+
+@app.route('/static/media/background.e9091fe5.png')
+def get_images_background():
+    return app.send_static_file('img/background.e9091fe5.png')
+
+@app.route('/static/media/topl_logo_white.66d9ce72.svg')
+def get_images_topl_logo():
+    return app.send_static_file('img/topl_logo_white.66d9ce72.svg')
 
 if __name__ == '__main__':
     app.run(host=('0.0.0.0' if app.env == 'production' else '127.0.0.1'))

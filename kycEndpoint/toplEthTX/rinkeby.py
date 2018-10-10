@@ -5,7 +5,7 @@ import toplEthTX.settings as settings
 class Rinkeby:
     def __init__(self):
         ##Establish connection to Ethereum network
-        self.w3 = Web3(Web3.HTTPProvider(settings.API_URL)) # for rinkeby testing
+        self.w3 = Web3(Web3.HTTPProvider(settings.API_URL))  # for rinkeby testing
 
         # Set contract addresses as deployed on rinkeby network
         self.arbits_presale_addr = "0x4393CeF911B451ab098c6973a28C913326E9413E"
@@ -22,7 +22,7 @@ class Rinkeby:
 
     def get_tx_params(self, acct_):
         # Specify tx_parameters
-        return txParams = {
+        return {
             'from': self.w3.toChecksumAddress(acct_),
             'chainId': 4,
             'nonce': self.w3.eth.getTransactionCount(self.w3.toChecksumAddress(acct_)),
@@ -70,5 +70,3 @@ class Rinkeby:
         self.w3.eth.sendRawTransaction(signTX.rawTransaction)
 
         return self.w3.toHex(self.w3.sha3(signTX.rawTransaction))
-        
-       
