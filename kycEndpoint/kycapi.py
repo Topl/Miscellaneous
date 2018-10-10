@@ -20,7 +20,7 @@ errFilePath = lambda ts: './Logs/' + formTime(ts) + '_errorLog'
 idmURL = 'https://regtech.identitymind.store/viewform/'
 
 # Define transaction lookup base URL
-etherscan_url = 'https://rinkeby.etherscan.io/tx/'
+etherscan_url = 'https://etherscan.io/tx/'
 
 # Define the geo-location IP data base file location
 ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
@@ -53,7 +53,8 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 # Setup add_to_whitelist function based on environment
-eth_net = toplEthTX.Rinkeby() if app.env == 'production' else toplEthTX.Local()
+#eth_net = toplEthTX.Rinkeby() if app.env == 'production' else toplEthTX.Local()
+eth_net = toplEthTX.Mainnet()
 
 ####################################################################################################################
 ## Database Models
@@ -89,7 +90,7 @@ class ToplAddr(db.Model):
 # Identity Mind public keys are available at https://regtech.identitymind.store/accounts/d/%20
 def verifyJWT(req):
     # If request is Ajax based (from IDM) open their public key otherwise use the test
-    pubKeyPath = 'idmSandboxPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'publicKey.pem'
+    pubKeyPath = 'idmProdPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'publicKey.pem'
     # Parse and verify JWT token
     reqJSON = req.get_json()
     with open('static/keys/' + pubKeyPath) as publicKey:
@@ -129,7 +130,8 @@ def requires_auth(f):
 ## Flask Views - Production
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('temp.html')
+    #return render_template('index.html')
 
 ## setup the KYC route
 @app.route("/kyc", methods=["GET","POST"])
@@ -236,7 +238,6 @@ def investorForm():
 def accept():
     try:
         tx_url = etherscan_url + Participant.query.filter_by(user_id=session.get('session_id')).first().tx_hash
-        #tx_url = etherscan_url + Participant.query.get(1).tx_hash
     except Exception:
         tx_hash = ''
         tx_url = ''
