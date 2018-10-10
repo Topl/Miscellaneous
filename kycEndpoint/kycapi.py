@@ -53,7 +53,7 @@ CORS(app, resources={r"/kyc": {"origins":"*"}})
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 # Setup add_to_whitelist function based on environment
-eth_net = toplEthTX.Rinkeby() if app.env == 'production' else toplEthTX.Local()
+eth_net = toplEthTX.Rinkeby() if app.env != 'production' else toplEthTX.Local()
 
 ####################################################################################################################
 ## Database Models

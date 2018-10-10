@@ -20,12 +20,12 @@ class Rinkeby:
         #Use the address of the deployed contract and the contract abi loaded from the json file to create the contract instance
         return self.w3.eth.contract( address = self.w3.toChecksumAddress(contract_addr_), abi = abi_)
 
-    def get_tx_params(self, acct_):
+    def get_tx_params(self, topl_addr_):
         # Specify tx_parameters
         return {
-            'from': self.w3.toChecksumAddress(acct_),
+            'from': self.w3.toChecksumAddress(topl_addr_),
             'chainId': 4,
-            'nonce': self.w3.eth.getTransactionCount(self.w3.toChecksumAddress(acct_)),
+            'nonce': self.w3.eth.getTransactionCount(self.w3.toChecksumAddress(topl_addr_)),
             'gas': 100000,
             'gasPrice': self.w3.eth.gasPrice,
             }
@@ -38,7 +38,7 @@ class Rinkeby:
         _contract = self.setup_contract_tx(self.arbits_presale_addr, ABI().arbits_presale)
 
         # create various stages of the transaction
-        rawTX = _contract.functions.add_to_whitelist(self.w3.toChecksumAddress(user_addr)).buildTransaction(self.get_tx_params(toplAcct))
+        rawTX = _contract.functions.add_to_whitelist(self.w3.toChecksumAddress(user_addr)).buildTransaction(self.get_tx_params(toplAcct.address))
         signTX = toplAcct.signTransaction(rawTX)
 
         # send the final signed transaction
@@ -59,10 +59,10 @@ class Rinkeby:
         toplAcct = self._getKey()
 
         # Setup contract instance
-        _contract = self.setup_contract_tx(self.icnq_token_addr, ABI().icnq_token)
+        _contract = self.setup_contract_tx(self.iconiq_data_pipe_addr, ABI().icnq_data_pipe)
 
         # create various stages of the transaction
-        rawTX = _contract.functions.set_iconiq_token_amount(self.w3.toChecksumAddress(addr_), 18000000).buildTransaction(self.get_tx_params(toplAcct))
+        rawTX = _contract.functions.set_iconiq_token_amount(self.w3.toChecksumAddress(addr_), 18000000).buildTransaction(self.get_tx_params(toplAcct.address))
         signTX = toplAcct.signTransaction(rawTX)
 
         # send the final signed transaction
