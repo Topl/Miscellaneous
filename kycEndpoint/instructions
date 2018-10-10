@@ -1,6 +1,0 @@
-to setup app on server
---------------------------
-deploy kycapi service (pull latest git & restart)
-launch python console and create tables in db
-put the ethereum addresses into the db
-set the first record used = True

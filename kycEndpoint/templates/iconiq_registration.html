@@ -9,7 +9,7 @@
                     <span class="oi oi-cog text-white" title="cog" aria-hidden="true" style="font-size:3vw"></span>
                 </div>
                 <div class="col-8 my-auto">
-                    <div class="long-banner text-center font-weight-bold text-white">
+                    <div class="banner text-center font-weight-bold text-white">
                         Iconiq Registration
                     </div>
                 </div>
@@ -26,15 +26,29 @@
                 receive the Iconiq exclusive discount.
             </h5>
             <h4>
-            <label for="basic-url">Ethereum Address Holding ICNQ Tokens</label>
+                <label for="basic-url">Ethereum Address Holding ICNQ Tokens</label>
             </h4>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="0x0000000000000000000000000000000000000000"
-                    aria-label="ICNQ address" aria-describedby="button-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Verify Ethereum address</button>
+            <form method="POST" action="/iconiq/registration">
+                <div class="input-group mb-3">
+
+                    <input type="text" class="form-control" placeholder="{{ disp_addr }}" aria-label="ICNQ address"
+                        aria-describedby="button-addon2" name="eth_addr">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Verify Ethereum
+                            address</button>
+                    </div>
                 </div>
-            </div>
+            </form>
+        </div>
+        <div>
+            <br>
+            <br>
+            {{ disp_in }}
+            {% if disp_response == 'success' %}
+            Kenny is sick.
+            {% elif disp_response == 'failure' %}
+            You killed Kenny! You bastard!!!
+            {% endif %}
         </div>
     </div>
 </div>

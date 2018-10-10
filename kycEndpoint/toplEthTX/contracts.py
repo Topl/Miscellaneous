@@ -13,3 +13,4 @@ class ABI:
         self.database = read_artifact('database')
         self.arbits_presale = read_artifact('arbits_presale')
         self.iconiq_presale = read_artifact('iconiq_presale')
+        self.icnq_token = read_artifact('icnqtoken')

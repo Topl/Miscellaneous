@@ -7,7 +7,7 @@ class Local:
         self.w3 = Web3(Web3.HTTPProvider('http://localhost:7545')) # for local dev
 
         # Set contract addresses as deployed on ethereum network
-        self.arbits_presale_addr = '0x49eeacd77d366f77959921f0a8ff201c07f9d94b' # replace this with the addr from deployment
+        self.arbits_presale_addr = '0x62834b754a9265bbab089ef2c36b1c9714055dc0' # replace this with the addr from deployment
 
     def add_to_whitelist(self, user_addr):
         # Set account to send from as the first account in the testnet list

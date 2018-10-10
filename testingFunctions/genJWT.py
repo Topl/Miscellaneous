@@ -16,7 +16,7 @@ objToJWT = {
         "btc": "0x2e0051c32F8B36D94F81c05A3fA5be119Ed768E0",
         "btc_type": "ETH",
         "city": "detroit",
-        "country": "US",
+        "country": "ZA",
         "dfp": "eyJJRHMiOnsiZGV2aWNlSUQiOiIxOXpEVEc4dW0yS21JaWE5cDdjSE9aR2ZoRUciLCJjb29raWVJRCI6IjE5ekRUR3BYVHJxdF$",
         "dob": "2005-01-01",
         "docCountry": "US",

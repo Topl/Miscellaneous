@@ -28,8 +28,7 @@ ipDB = geoip2.database.Reader('db/GeoLite2/GeoLite2-Country.mmdb')
 # Define simple user authentication dictionary
 topl_users = {
     "topl_admin": "7f4d69e38043ee58a81636b922993661b2e2f9fa4d0ba0127f94d74b7477860c",
-    "topl_vip": "2913b3c9f6f1fdf3cc961aa0a46f8b1613e0a9175a6d38cc83cae8ec8ef79165",
-    "topl_test": "feb14492c404bd9446317fd6c6e216bd719375e23331ce6093ee5524cc17bbdc"
+    "topl_vip": "2913b3c9f6f1fdf3cc961aa0a46f8b1613e0a9175a6d38cc83cae8ec8ef79165"
 }
 
 # lambda function to shorten hash function call
@@ -164,7 +163,7 @@ def kycProcess():
             usr_eth_addr = payload['form_data']['btc']
 
         # send KYC request via Infura API if KYC was accepted, (if manual_review, deny, or repeated then skip)
-        if (usr_eth_addr not ToplAddr.query.get(1).address) and (payload['kyc_result'] == 'ACCEPT'):
+        if (usr_eth_addr != ToplAddr.query.get(1).address) and (payload['kyc_result'] == 'ACCEPT'):
             tx_hash = eth_net.add_to_whitelist(usr_eth_addr)
         else:
             tx_hash = 0
@@ -246,9 +245,18 @@ def accept():
     finally:
         return render_template('accept.html', tx_url = tx_url)
 
-@app.route('/iconiq/registration')
+@app.route('/iconiq/registration', methods=['GET','POST'])
 def iconiq_register():
-    return render_template('iconiq_registration.html')
+    icnq_response = ''
+    placeholder_addr = "0x0000000000000000000000000000000000000000"
+    form_in = 'foo'
+
+    if request.method == 'POST':
+        if eth_net.check_icnq_balance(request.form.get('eth_addr'))
+        form_in = request.form.get('eth_addr')
+
+    return render_template('iconiq_registration.html',
+         disp_response = icnq_response, disp_addr = placeholder_addr, disp_in = form_in)
 
 @app.route('/result/accept-vip')
 def accept_vip():
