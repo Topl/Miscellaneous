@@ -207,7 +207,7 @@ def upload():
     for iter in range(0, len(addr_list)):
         db.session.add(ToplAddr(
             address = addr_list[iter]['address'],
-            used = False
+            used = True if iter == 0 else False
             )
         )
     db.session.commit()
