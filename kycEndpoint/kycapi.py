@@ -287,6 +287,11 @@ def ip_error():
     return render_template('ip-error.html')
 
 #### Test form routes
+@app.route('/testindex')
+@requires_auth
+def testindex():
+    return render_template('index.html')
+
 @app.route('/testform/home')
 @requires_auth
 def test_home():
