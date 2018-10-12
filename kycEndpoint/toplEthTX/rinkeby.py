@@ -5,7 +5,7 @@ import toplEthTX.settings as settings
 class Rinkeby:
     def __init__(self):
         ##Establish connection to Ethereum network
-        self.w3 = Web3(Web3.HTTPProvider(settings.INFURA_API_URL))  # for rinkeby testing
+        self.w3 = Web3(Web3.HTTPProvider('https://rinkeby.infura.io/v3/' + settings.INFURA_API_KEY))  # for rinkeby testing
 
         # Set contract addresses as deployed on rinkeby network
         self.arbits_presale_addr = '0x4393CeF911B451ab098c6973a28C913326E9413E'

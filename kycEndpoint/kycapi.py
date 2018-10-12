@@ -237,9 +237,8 @@ def iconiq_register():
         except:
             placeholder_addr = 'Invalid address input. Please try again'
 
-        finally:
-            return render_template('iconiq_registration.html',
-                           disp_response=icnq_response, disp_addr=placeholder_addr, tx_url=tx_url)
+    return render_template('iconiq_registration.html',
+                    disp_response=icnq_response, disp_addr=placeholder_addr, tx_url=tx_url)
 
 #### Form routes
 # for serving the general population particpating in the sale
