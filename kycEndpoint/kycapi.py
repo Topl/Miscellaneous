@@ -41,7 +41,7 @@ database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db
 ####################################################################################################################
 ## Flask app setup
 # standard instantiantion of the api application through flask
-app = Flask(__name__, static_url_path='/images')
+app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(20)
@@ -210,7 +210,38 @@ def upload():
         )
     db.session.commit()
     return jsonify({"success":True})
+    
 
+@app.route('/iconiq/registration', methods=['GET', 'POST'])
+def iconiq_register():
+    icnq_response = ''
+    placeholder_addr = "0x0000000000000000000000000000000000000000"
+    tx_url = ''
+
+    if request.method == 'POST':
+        try:
+            # Catch exception in case the tx fails
+            placeholder_addr = ''
+            if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
+                # Enforce threshold of ICNQ token
+                icnq_response = 'success'
+
+                if eth_net.check_icnq_pro_rata(request.form.get('eth_addr')) > 0:
+                    # Make sure this address isn't already registered
+                    tx_url = etherscan_url + \
+                        eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
+
+            else:
+                icnq_response = 'failure'
+
+        except:
+            placeholder_addr = 'Invalid address input. Please try again'
+
+        finally:
+            return render_template('iconiq_registration.html',
+                           disp_response=icnq_response, disp_addr=placeholder_addr, tx_url=tx_url)
+
+#### Form routes
 # for serving the general population particpating in the sale
 # If in US kick out to error page, if not allow to the KYC form
 @app.route('/kyc/general')
@@ -233,7 +264,7 @@ def generalForm(ipBool=False):
 def investorForm():
     return render_template('form_host.html', iframeURL=(idmURL + "gxq27/?user_id=vip"))
 
-# Result pages
+#### Result pages
 @app.route('/result/accept')
 def accept():
     try:
@@ -247,23 +278,6 @@ def accept():
     finally:
         return render_template('accept.html', tx_url = tx_url)
 
-@app.route('/iconiq/registration', methods=['GET','POST'])
-def iconiq_register():
-    icnq_response = ''
-    placeholder_addr = "0x0000000000000000000000000000000000000000"
-    tx_url = ''
-
-    if request.method == 'POST':
-        placeholder_addr = ''
-        if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
-            icnq_response = 'success'
-            tx_url = etherscan_url + eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
-        else:
-            icnq_response = 'failure'
-
-    return render_template('iconiq_registration.html',
-         disp_response = icnq_response, disp_addr = placeholder_addr, tx_url = tx_url)
-
 @app.route('/result/accept-vip')
 def accept_vip():
     return render_template('accept-vip.html')
@@ -276,12 +290,17 @@ def review():
 def deny():
     return render_template('deny.html')
 
-# Error page for IP address in US
+#### Error page for IP address in US
 @app.route('/ip_error')
 def ip_error():
     return render_template('ip-error.html')
 
-# Test form routes
+#### Test form routes
+@app.route('/testindex')
+@requires_auth
+def testindex():
+    return render_template('index.html')
+
 @app.route('/testform/home')
 @requires_auth
 def test_home():
@@ -297,6 +316,7 @@ def test_generalForm():
 def test_investorForm():
     return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
 
+#### Asset routes
 @app.route('/images/participate.png')
 def get_images_participate():
     return app.send_static_file('img/participate.png')

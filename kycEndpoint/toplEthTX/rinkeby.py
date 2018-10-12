@@ -5,7 +5,7 @@ import toplEthTX.settings as settings
 class Rinkeby:
     def __init__(self):
         ##Establish connection to Ethereum network
-        self.w3 = Web3(Web3.HTTPProvider(settings.API_URL))  # for rinkeby testing
+        self.w3 = Web3(Web3.HTTPProvider(settings.INFURA_API_URL))  # for rinkeby testing
 
         # Set contract addresses as deployed on rinkeby network
         self.arbits_presale_addr = '0x4393CeF911B451ab098c6973a28C913326E9413E'
@@ -13,7 +13,7 @@ class Rinkeby:
         self.iconiq_data_pipe_addr = '0xD86cdd3978D3b293d3e29C6B7eCD76a0360993d8'
 
     def _getKey(self):
-        with open(settings.ETH_KEY_PATH) as keyfile: 
+        with open(settings.RINKEBY_ETH_KEY_PATH) as keyfile: 
             return self.w3.eth.account.privateKeyToAccount(self.w3.eth.account.decrypt(keyfile.read(), settings.ETH_PHRASE))
 
     def setup_contract_tx(self, contract_addr_, abi_):
