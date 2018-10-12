@@ -5,7 +5,7 @@ import toplEthTX.settings as settings
 class Mainnet:
     def __init__(self):
         ##Establish connection to Ethereum network
-        self.w3 = Web3(Web3.HTTPProvider(settings.MAINNET_API_URL))  # for rinkeby testing
+        self.w3 = Web3(Web3.HTTPProvider(settings.INFURA_API_URL))  # for rinkeby testing
 
         # Set contract addresses as deployed on rinkeby network
         self.arbits_presale_addr = '0xA3cD2Dd81c0115d801282f1711e9656Ae2770566'

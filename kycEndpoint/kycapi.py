@@ -3,7 +3,7 @@
 #This product includes GeoLite2 data created by MaxMind, available from
 #<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
 
-from flask import Flask, request, jsonify, render_template, redirect, Response, session
+from flask import Flask, request, jsonify, render_template, redirect, Response, session, url_for
 from flask_cors import CORS
 from functools import wraps
 import flask_sqlalchemy
@@ -210,27 +210,28 @@ def upload():
         )
     db.session.commit()
     return jsonify({"success":True})
-	
-@app.route('/iconiq/registration', methods=['GET','POST'])
+    
+
+@app.route('/iconiq/registration', methods=['GET', 'POST'])
 def iconiq_register():
     icnq_response = ''
     placeholder_addr = "0x0000000000000000000000000000000000000000"
     tx_url = ''
 
     if request.method == 'POST':
-		try:
-			placeholder_addr = ''
-			if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
-				icnq_response = 'success'
-				tx_url = etherscan_url + eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
-			else:
-				icnq_response = 'failure'
-		except:
-			placeholder_addr = 'Invalid address input. Please try again'
-		finally:
-
-    return render_template('iconiq_registration.html',
-         disp_response = icnq_response, disp_addr = placeholder_addr, tx_url = tx_url)
+        try:
+            placeholder_addr = ''
+            if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
+                icnq_response = 'success'
+                tx_url = etherscan_url + \
+                    eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
+            else:
+                icnq_response = 'failure'
+        except:
+            placeholder_addr = 'Invalid address input. Please try again'
+        finally:
+            return render_template('iconiq_registration.html',
+                           disp_response=icnq_response, disp_addr=placeholder_addr, tx_url=tx_url)
 
 #### Form routes
 # for serving the general population particpating in the sale
