@@ -41,7 +41,7 @@ database_file = "sqlite:///{}".format(os.path.join(os.path.sep, project_dir, 'db
 ####################################################################################################################
 ## Flask app setup
 # standard instantiantion of the api application through flask
-app = Flask(__name__, static_url_path='/images')
+app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(20)
@@ -236,7 +236,7 @@ def iconiq_register():
 
         except:
             placeholder_addr = 'Invalid address input. Please try again'
-            
+
         finally:
             return render_template('iconiq_registration.html',
                            disp_response=icnq_response, disp_addr=placeholder_addr, tx_url=tx_url)
