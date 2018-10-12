@@ -3,7 +3,7 @@
 #This product includes GeoLite2 data created by MaxMind, available from
 #<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
 
-from flask import Flask, request, jsonify, render_template, redirect, Response, session, url_for
+from flask import Flask, request, jsonify, render_template, redirect, Response, session
 from flask_cors import CORS
 from functools import wraps
 import flask_sqlalchemy
@@ -220,15 +220,23 @@ def iconiq_register():
 
     if request.method == 'POST':
         try:
+            # Catch exception in case the tx fails
             placeholder_addr = ''
             if eth_net.check_icnq_balance(request.form.get('eth_addr')) >= 100:
+                # Enforce threshold of ICNQ token
                 icnq_response = 'success'
-                tx_url = etherscan_url + \
-                    eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
+
+                if eth_net.check_icnq_pro_rata(request.form.get('eth_addr')) > 0:
+                    # Make sure this address isn't already registered
+                    tx_url = etherscan_url + \
+                        eth_net.set_iconiq_token_allotment(request.form.get('eth_addr'))
+
             else:
                 icnq_response = 'failure'
+
         except:
             placeholder_addr = 'Invalid address input. Please try again'
+            
         finally:
             return render_template('iconiq_registration.html',
                            disp_response=icnq_response, disp_addr=placeholder_addr, tx_url=tx_url)

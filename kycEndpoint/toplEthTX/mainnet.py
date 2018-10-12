@@ -8,6 +8,7 @@ class Mainnet:
         self.w3 = Web3(Web3.HTTPProvider(settings.INFURA_API_URL))  # for rinkeby testing
 
         # Set contract addresses as deployed on rinkeby network
+        self.database_addr = '0xCF1F116947Ba657dcc9Fbab294d2D8CD4B12c362'
         self.arbits_presale_addr = '0xA3cD2Dd81c0115d801282f1711e9656Ae2770566'
         self.icnq_token_addr = '0xB3e2Cb7CccfE139f8FF84013823Bf22dA6B6390A'
         self.iconiq_data_pipe_addr = '0x230c018122E0E101e57889C4A067787678bCf853'
@@ -52,6 +53,13 @@ class Mainnet:
         _contract = self.setup_contract_tx(self.icnq_token_addr, ABI().icnq_token)
 
         return _contract.functions.balanceOf(self.w3.toChecksumAddress(addr_)).call()
+
+
+    def check_icnq_pro_rata(self, addr_):
+        # Setup contract instance
+        _contract = self.setup_contract_tx(self.database_addr, ABI().database)
+
+        return _contract.functions.get_participant_num_of_pro_rata_tokens_alloted(self.w3.toChecksumAddress(addr_)).call()
 
 
     def set_iconiq_token_allotment(self, addr_):
