@@ -336,5 +336,10 @@ def get_images_background():
 def get_images_topl_logo():
     return app.send_static_file('img/topl_logo_white.66d9ce72.svg')
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
+
 if __name__ == '__main__':
     app.run(host=('0.0.0.0' if app.env == 'production' else '127.0.0.1'))
