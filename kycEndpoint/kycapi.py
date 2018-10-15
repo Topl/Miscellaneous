@@ -130,8 +130,8 @@ def requires_auth(f):
 ## Flask Views - Production
 @app.route("/")
 def index():
-    return render_template('temp.html')
-    #return render_template('index.html')
+    #return render_template('temp.html')
+    return render_template('index.html')
 
 ## setup the KYC route
 @app.route("/kyc", methods=["GET","POST"])

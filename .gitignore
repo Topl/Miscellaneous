@@ -5,7 +5,7 @@ kycEndpoint/apienv/
 kycEndpoint/__pycache__/
 kycEndpoint/.vscode/
 kycEndpoint/toplEthTX/pr*
-kycEndpoint/toplEthTx/settings.py
+kycEndpoint/toplEthTX/settings.py
 *.pyc
 *.zip
 kycEndpoint/Logs/
