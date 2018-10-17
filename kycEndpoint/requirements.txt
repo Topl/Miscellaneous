@@ -8,7 +8,7 @@ flask-sqlalchemy
 geoip2
 
 # Production
-uwsgi
+#uwsgi
 
 # Development (jaa)
-dotenv
+#dotenv

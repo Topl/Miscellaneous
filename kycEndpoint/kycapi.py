@@ -90,7 +90,7 @@ class ToplAddr(db.Model):
 # Identity Mind public keys are available at https://regtech.identitymind.store/accounts/d/%20
 def verifyJWT(req):
     # If request is Ajax based (from IDM) open their public key otherwise use the test
-    pubKeyPath = 'idmProdPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'publicKey.pem'
+    pubKeyPath = 'idmProdPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'toplPublicKey.pem'
     # Parse and verify JWT token
     reqJSON = req.get_json()
     with open('static/keys/' + pubKeyPath) as publicKey:
@@ -128,9 +128,9 @@ def requires_auth(f):
 
 ####################################################################################################################
 ## Flask Views - Production
-@app.route("/")
-def index():
-    #return render_template('temp.html')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
     return render_template('index.html')
 
 ## setup the KYC route
@@ -308,7 +308,7 @@ def test_home():
 @app.route('/testform/general')
 @requires_auth
 def test_generalForm():
-    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=" + session_id))
+    return render_template('form_host.html', iframeURL=(idmURL + "gyeq4/?user_id=general"))
 
 @app.route('/testform/vip')
 @requires_auth
@@ -335,6 +335,11 @@ def get_images_background():
 @app.route('/static/media/topl_logo_white.66d9ce72.svg')
 def get_images_topl_logo():
     return app.send_static_file('img/topl_logo_white.66d9ce72.svg')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     app.run(host=('0.0.0.0' if app.env == 'production' else '127.0.0.1'))
