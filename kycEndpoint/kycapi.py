@@ -90,7 +90,7 @@ class ToplAddr(db.Model):
 # Identity Mind public keys are available at https://regtech.identitymind.store/accounts/d/%20
 def verifyJWT(req):
     # If request is Ajax based (from IDM) open their public key otherwise use the test
-    pubKeyPath = 'idmProdPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'publicKey.pem'
+    pubKeyPath = 'idmProdPubKey.pem' if req.headers['origin'] == 'https://regtech.identitymind.store' else 'toplPublicKey.pem'
     # Parse and verify JWT token
     reqJSON = req.get_json()
     with open('static/keys/' + pubKeyPath) as publicKey:
