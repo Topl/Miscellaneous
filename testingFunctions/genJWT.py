@@ -12,37 +12,37 @@ f.close()
 
 objToJWT = {
     "form_data": {
-        "backsideImageData": "data:image/jpeg;base64",
+        "backsideImageData": "",
         "btc": "0x2e0051c32F8B36D94F81c05A3fA5be119Ed768E0",
         "btc_type": "ETH",
-        "city": "detroit",
+        "city": "",
         "country": "ZA",
-        "dfp": "eyJJRHMiOnsiZGV2aWNlSUQiOiIxOXpEVEc4dW0yS21JaWE5cDdjSE9aR2ZoRUciLCJjb29raWVJRCI6IjE5ekRUR3BYVHJxdF$",
-        "dob": "2005-01-01",
-        "docCountry": "US",
-        "docType": "DL",
-        "email": "j@r.com",
-        "full_name": "d",
+        "dfp": "",
+        "dob": "",
+        "docCountry": "ZA",
+        "docType": "",
+        "email": "suzetteviljoen@hotmail.co.za",
+        "full_name": "",
         "gdpr_purpose": "",
-        "last_name": "d",
-        "phone": "2817759652",
-        "phone_code": "+1",
-        "scanData": "data:image/jpeg;base64",
+        "last_name": "",
+        "phone": "",
+        "phone_code": "",
+        "scanData": "",
         "show_address_list": [
-            "US"
+            ""
         ],
         "show_id_list": [
             ""
         ],
         "ssn": "",
-        "state": "DC",
-        "street": "1928 help rd.",
+        "state": "",
+        "street": "",
         "user_id": "vip",
-        "version": "2",
-        "zip_code": "77098"
+        "version": "",
+        "zip_code": ""
     },
     "kyc_result": "ACCEPT",
-    "tid": "77c2b90e8e1391c79c27c569ee425d9ca2a45d5fc838f773deb72df56a39176b"
+    "tid": "0000000000000000000000000000000000000000000000000000000000000000"
 }
 
 
