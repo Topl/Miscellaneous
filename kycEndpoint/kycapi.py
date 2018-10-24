@@ -330,11 +330,11 @@ def get_images_usetokens():
 
 @app.route('/static/media/background.e9091fe5.png')
 def get_images_background():
-    return app.send_static_file('img/background.e9091fe5.png')
+    return app.send_static_file('img/background.png')
 
 @app.route('/static/media/topl_logo_white.66d9ce72.svg')
 def get_images_topl_logo():
-    return app.send_static_file('img/topl_logo_white.66d9ce72.svg')
+    return app.send_static_file('img/topl_logo_white.svg')
 
 @app.errorhandler(404)
 def page_not_found(e):
