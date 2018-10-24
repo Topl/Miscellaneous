@@ -1,0 +1,30 @@
+div.banner {
+    font-size: 6vw;
+}
+
+@media screen and (min-width: 800px) {
+  div.banner {
+    font-size: 30px;
+  }
+}
+
+div.long-banner {
+  font-size: 4vw;
+}
+
+@media screen and (min-width: 800px) {
+div.long-banner {
+  font-size: 30px;
+}
+}
+
+div.very-long-banner {
+  font-size: 3vw;
+}
+
+@media screen and (min-width: 800px) {
+div.very-long-banner {
+  font-size: 30px;
+}
+}
+
