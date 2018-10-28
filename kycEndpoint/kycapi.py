@@ -289,6 +289,11 @@ def review():
 def deny():
     return render_template('deny.html')
 
+#### Intro walkthrough
+@app.route('/intro-to-ethereum')
+def intro():
+    return render_template('intro_to_ethereum.html')
+
 #### Error page for IP address in US
 @app.route('/ip_error')
 def ip_error():
