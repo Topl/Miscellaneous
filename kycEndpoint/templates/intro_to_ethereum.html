@@ -21,7 +21,7 @@
         <p>
             This introduction is meant for those uncertain with how to interact with the Ethereum network.
             As an emerging technology, blockchains can sometimes appear daunting to those unfamiliar with the
-            jargon and lingo. Below we'll walk through the several key topics and provide links to further resources.
+            jargon and lingo. Below we'll walk through several key topics and provide links to further resources.
         </p>
         <p>If you encounter any problems or have issues participating in the Topl pre-sale please email
             <a href="mailto:info@topl.me">info@topl.me</a>
@@ -35,8 +35,7 @@
         <hr />
         <h3><a name="ethereum">What is Ethereum?</a></h3>
         <p>
-            So if you've made it here and are unfamiliar with Ethereum, let me be the first to welcome you! Before we
-            get into some specifics though, please be advised to FULLY understand the risks involved with placing funds
+            Before we get into specifics, please be advised to FULLY understand the risks involved with placing funds
             on the Ethereum network. While the technology behind Ethereum is incredibly secure and robust, most errors
             occur due to user misunderstanding or error. Due to the nature of the underlying technology, mistakes
             cannot be reversed so be careful and understand what you are doing.
@@ -44,27 +43,35 @@
         <p>
             Ethereum is a popular general-purpose blockchain network that launched in 2015. You may be familiar with
             another blockchain network, Bitcoin, which has received a lot of attention on the internet and in the
-            media. Bitcoin is a predecessor to the Ethereum network a has really led the way for blockchains adoption.
-            The Bitcoin network is limited to simply payments though and Ethereum's biggest innovation was the creation
+            media. Bitcoin is a predecessor to the Ethereum network and has really led the way for blockchain's
+            adoption.
+            However, the Bitcoin network is limited to simply payments and Ethereum's biggest innovation was the
+            creation of
             "smart contracts". These smart contracts are really just simple programs that anyone can interact with on
-            the Ethereum network. That is revolutionary! Now we have a decentralized global infrastructure that allows
+            the Ethereum network. But they are revolutionary! Now we have a decentralized global infrastructure that
+            allows
             anyone, anywhere, at anytime to interact with a simple program and have the entire network come to
-            agreement about how that interaction occured. Not only does everyone agree about how the interaction
+            agreement about how that interaction occured. Furthermore, not only does everyone agree about how the
+            interaction
             occured but it is also impossible to erase the existence of that interaction.
         </p>
         <h4>Simple use case</h4>
         <p>
             Imagine loaning a friend $10 and agreeing to a repayment date. Then your friend forgets and denies you ever
-            loaned them the money. This type of interaction is the basis for real world contracts with lawyers but now
-            using Ethereum you can loan you friend $10 and record the transaction and repayment date onto the network.
-            Then come the date of repayment, you have an unchanging immutable record you can point back to when asking
-            for collection. Additionally, you can have the contract compute the interest owed and enforce repercussions
-            of what happens on default of payment.
-
-            Building on top of this infrastructure, you might imagine a whole bunch of interactions between people that
-            could benefit from the increased transparency and immutability of data that blockchains can provide.
+            loaned them the money. This type of interaction naturally leads to the creation of legally
+            binding contracts with lawyers and ajudication done by courts. But now,
+            using Ethereum, you can use a "smart contract" to loan your friend the $10 and that computer program will
+            record the transaction and any other details of the transaction onto the network.
+            Then come the date of repayment, the computer program can prompt your friend for payment or enforce the
+            terms of default, all done automatically and without the need to involve third parties (laywers, courts,
+            banks, etc.)
+            in this simple interaction. This provides transparency and trustlessness between parties through the
+            reduction of counter-party risk.
         </p>
         <p>
+            Building on top of this infrastructure, you might imagine a whole bunch of interactions between people that
+            could benefit from the increased transparency, reduction of risk, and immutability of data that blockchains
+            can provide.
             Below are some links to various sources around the web to give you a better understanding of Ethereum and
             blockchains in general.
             <br />
@@ -75,7 +82,7 @@
                 target="_blank">Coinbase: Intro to Ethereum</a>
             <br /> <br />
             For those looking to nerd out on an accessible but slightly technical description of how blockchains work
-            <br />
+            please watch this excellent video
             <a href="https://www.youtube.com/watch?v=_160oMzblY8" rel="noopener noreferrer" target="_blank">Anders
                 Blockchain explainer</a>
         </p>
@@ -105,17 +112,18 @@
                 target="_blank">Metamask Basics</a>
             <br />
             <a href="https://metamask.zendesk.com/hc/en-us/sections/360002148511-MetaMask-FAQs" rel="noopener noreferrer"
-                target="_blank">Blockgeeks:
+                target="_blank">
                 Metamask: FAQ</a>
         </p>
         <hr />
         <h3><a name="deposit">How do I get Ether?</a></h3>
         <p>
             Once you have installed Metamask, the easiest way to fund your account is to purchase tokens from an
-            exchange and send them to yourself. Below we provide a simple demonstration using <a href="https://coinbase.com rel="
-                noopener noreferrer" target="_blank">Coinbase</a> and purchasing
-            funds with a credit card. However, this is not the only route and we encourage users to research
-            alternative strategies to fund their wallets, if they choose.
+            exchange and send them to yourself. Below we provide a simple demonstration using <a href="https://coinbase.com"
+                rel=noopener noreferrer target="_blank">Coinbase</a> and purchasing
+            funds with a debit card. However, this is not the only route to funding your wallet and we encourage users
+            to research
+            alternative strategies to purchasing Ethereum.
         </p>
         <ul>
             <li>
@@ -175,7 +183,8 @@
                 <img src="{{ url_for('static', filename='img/walkthrough/confirm-purchase.png') }}" height=300px class="p-3">
             </li>
             <li>
-                Congratulations! You have just purchased Ether. Your funds should appear in Metamask shortly. Once there you can return to the pre-sale homepage and participate in the sale.
+                Congratulations! You have just purchased Ether. Your funds should appear in Metamask shortly. Once
+                there you can return to the pre-sale homepage and participate in the sale.
                 <br />
                 <img src="{{ url_for('static', filename='img/walkthrough/confirm.png') }}" height=300px class="p-3">
             </li>
@@ -184,34 +193,39 @@
         <h3><a name="safe">Is it safe?</a></h3>
         <p>
             The blockchain technology which underlies Ethereum is incredibly robust and secure but due to the newness
-            of the field many scammers have devised clever ways to trick user out of their funds. While the tips below
+            of the field many scammers have devised clever ways to trick users out of their funds. While the tips below
             are not an exhaustive list of steps you should take to protect yourself, they do serve as a good starting
             point for skepticism. Remember to always double check the address before you send funds and never follow
             prompts if you are unsure or suspicious of their origins or intent.
         </p>
         <ul>
             <li>
-                Topl will never contact you on social media with a naked wallet address and ask you to send funds to
-                it. If you receive such a request please email info@topl.me and do not make the transaction
+                When moving funds into an account for the first time, it is a best practice to move a small amount of
+                Ether first to ensure you have the account details correct. After you have confirmed receipt of the
+                small transfer to the new account you can proceed with fully funding the account.
             </li>
             <li>
-                Whenever you are not using MetaMask to check your balance or make a transaction log out of it
+                Topl will never contact you on social media with a naked wallet address and ask you to send funds to
+                it. If you receive such a request please email info@topl.me and do not make the transaction.
+            </li>
+            <li>
+                Whenever you are not using MetaMask to check your balance or make a transaction log out of it.
             </li>
             <li>
                 Be aware of fake pop ups that prompt you to send funds via your MetaMask. Always double check where you
-                are sending funds and NEVER click "Confirm" if you are unsure
+                are sending funds and NEVER click "Confirm" if you are unsure.
             </li>
             <li>
                 Never enter your MetaMask password, private key, or seed phrase into a third-party website. You should
                 only input your password, private key, or seed phrase into the official application.
             </li>
             <li>
-                If an offer appears "to good to be true" it probably is and is looking for some way to steal your
+                If an offer appears "to good to be true" it probably is. Such offers are likely looking for some way to steal your
                 funds.
             </li>
         </ul>
-        <p>Once more, welcome to the world of Ethereum and blockchains! This last bit may have seemed worrying but is
-            only meant as a caution and to remind you that YOU are in control of your funds nad therefore responsible
+        <p>Welcome to the world of Ethereum and blockchains! This last bit may have seemed worrying but is
+            only meant as a caution and to remind you that YOU are in control of your funds and therefore responsible
             for where they are sent.
             <br />
             <br />
