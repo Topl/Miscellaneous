@@ -11,4 +11,4 @@ geoip2
 #uwsgi
 
 # Development (jaa)
-#dotenv
+#python-dotenv

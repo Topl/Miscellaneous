@@ -406,7 +406,6 @@ def get_images_background():
 def get_images_topl_logo():
     return app.send_static_file('img/topl_logo_white.svg')
 
-
 @app.errorhandler(404)
 def page_not_found(e):
     # note that we set the 404 status explicitly
