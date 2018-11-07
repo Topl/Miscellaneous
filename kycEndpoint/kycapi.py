@@ -303,6 +303,11 @@ def generalForm(ipBool=False):
 def investorForm():
     return render_template('form_host.html', iframeURL=(idmURL + "gxq27/?user_id=vip"))
 
+@app.route('/identity')
+@requires_auth
+def typeformForm():
+    return render_template('form_host.html', iframeURL="https://topl.typeform.com/to/eZHrS7") 
+
 # Result pages
 
 
@@ -377,8 +382,6 @@ def test_investorForm():
     return render_template('form_host.html', iframeURL=(idmURL + "6wquv/?user_id=vip"))
 
 # Asset routes
-
-
 @app.route('/images/participate.png')
 def get_images_participate():
     return app.send_static_file('img/participate.png')
